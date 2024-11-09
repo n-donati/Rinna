@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+ROOT_URLCONF = "mainframe.urls"
+
 ROOT_URLCONF = 'rinna.urls'
 
 TEMPLATES = [
