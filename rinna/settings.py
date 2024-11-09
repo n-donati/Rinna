@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-e@lpopmb+1m%6&gq8(1pr700o7v8$+k%(w*(!s5s&$4u+n=0bh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,7 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app',
 ]
+
+CSRF_TRUSTED_ORIGINS = ['*']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,6 +81,10 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 
 # Password validation
