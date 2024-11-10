@@ -56,7 +56,17 @@
   </script>
   <script type="text/javascript" async src="https://btloader.com/tag?o=5172243878903808&upapi=true"></script>
 
-  <link rel="stylesheet" href="{% static 'css/market.css' %}">
+<link rel="stylesheet" href="{% static 'css/market.css' %}">
+
+<style>
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+dialog {
+  border: none;
+}
+</style>
 
 </head>
 
@@ -281,11 +291,71 @@
 
 </header>
 
-<div class="tw-flex container tw-justify-center tw-items-center tw-mt-2 tw-h-50px md:tw-h-100px"
-  data-ads-target="banner">
+<dialog id="receiptDialog" class="tw-fixed tw-top-1/2 tw-left-1/2 tw-transform -tw-translate-x-1/2 -tw-translate-y-1/2 tw-bg-white dark:tw-bg-moon-900 tw-rounded-xl tw-shadow-xl tw-p-6 tw-min-w-[300px]">
+  <div class="tw-flex tw-flex-col tw-gap-4">
+    <div class="tw-flex tw-justify-between tw-items-center">
+      <h3 class="tw-text-lg tw-font-bold dark:tw-text-moon-50">Detalles de Pago</h3>
+        <button onclick="closeDialog()" class="tw-text-red-500 hover:tw-text-red-700 dark:tw-text-moon-200 tw-text-2xl tw-p-2">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="tw-border-t dark:tw-border-moon-700"></div>
+    <div id="receiptContent" class="tw-space-y-2">
+      <!-- Receipt content will be inserted here -->
+    </div>
+    <button onclick="handlePayment()" class="tw-bg-primary-500 tw-text-white tw-py-2 tw-px-4 tw-rounded-lg hover:tw-bg-primary-600 tw-transition-colors">
+      Proceder al Pago
+    </button>
+  </div>
+</dialog>
 
-  <div data-aaad="true" data-aa-adunit="/22743369056/CoinGecko_S2S_Leaderboard_ATF_ROS"></div>
+<div class="tw-relative tw-flex container tw-justify-center tw-items-center tw-mt-2 tw-h-50px md:tw-h-100px" data-ads-target="banner">
+  <div class="tw-absolute tw-bottom-4 tw-left-4 tw-z-50 tw-flex tw-gap-4">
+    <div class="tw-flex tw-items-center tw-bg-white dark:tw-bg-moon-900 tw-rounded-full tw-shadow-lg tw-py-2 tw-px-4 tw-cursor-pointer hover:tw-shadow-xl tw-transition-all tw-duration-200"
+         onclick="showReceipt(this)" 
+         data-company="Suburbia"
+         data-amount="2,101,038"
+         data-block="19288"
+         data-status="PAGO PENDIENTE">
+      <div class="tw-w-8 tw-h-8 tw-rounded-full tw-bg-gray-200 dark:tw-bg-moon-700 tw-flex tw-items-center tw-justify-center tw-mr-3">
+        <img class="tw-w-6 tw-h-6" src="{% static 'svg/mercado/7m.svg' %}" alt="Logo">
+      </div>
+      <div class="tw-flex tw-flex-col tw-items-start">
+        <span class="tw-text-sm tw-font-semibold tw-text-gray-900 dark:tw-text-moon-50">Bloque #19288</span>
+        <div class="tw-flex tw-items-center tw-gap-2">
+          <span class="tw-text-xs tw-text-gray-500 dark:tw-text-moon-200">$2,101,038 MXN</span>
+          <span class="tw-text-xs tw-font-medium tw-text-blue-600 dark:tw-text-blue-400">PAGO PENDIENTE</span>
+        </div>
+      </div>
+    </div>
+    <div class="tw-flex tw-items-center tw-bg-white dark:tw-bg-moon-900 tw-rounded-full tw-shadow-lg tw-py-2 tw-px-4 tw-cursor-pointer hover:tw-shadow-xl tw-transition-all tw-duration-200">
+      <div class="tw-w-8 tw-h-8 tw-rounded-full tw-bg-gray-200 dark:tw-bg-moon-700 tw-flex tw-items-center tw-justify-center tw-mr-3">
+        <img class="tw-w-6 tw-h-6" src="{% static 'svg/mercado/1m.svg' %}" alt="Logo">
+      </div>
+      <div class="tw-flex tw-flex-col tw-items-start">
+        <span class="tw-text-sm tw-font-semibold tw-text-gray-900 dark:tw-text-moon-50">Bloque #20910</span>
+        <div class="tw-flex tw-items-center tw-gap-2">
+          <span class="tw-text-xs tw-text-gray-500 dark:tw-text-moon-200">$920,044 MXN</span>
+          <span class="tw-text-xs tw-font-medium tw-text-red-600 dark:tw-text-red-400">PERDIDO</span>
+        </div>
+      </div>
+    </div>
+    <div class="tw-flex tw-items-center tw-bg-white dark:tw-bg-moon-900 tw-rounded-full tw-shadow-lg tw-py-2 tw-px-4 tw-cursor-pointer hover:tw-shadow-xl tw-transition-all tw-duration-200">
+      <div class="tw-w-8 tw-h-8 tw-rounded-full tw-bg-gray-200 dark:tw-bg-moon-700 tw-flex tw-items-center tw-justify-center tw-mr-3">
+        <img class="tw-w-6 tw-h-6" src="{% static 'svg/mercado/3m.svg' %}" alt="Logo">
+      </div>
+      <div class="tw-flex tw-flex-col tw-items-start">
+        <span class="tw-text-sm tw-font-semibold tw-text-gray-900 dark:tw-text-moon-50">Bloque #27492</span>
+        <div class="tw-flex tw-items-center tw-gap-2">
+          <span class="tw-text-xs tw-text-gray-500 dark:tw-text-moon-200">$451,087 MXN</span>
+          <span class="tw-text-xs tw-font-medium tw-text-red-600 dark:tw-text-red-400">PERDIDO</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
 
 
 
@@ -3732,5 +3802,49 @@
     </div>
   </div>
 </footer>
+<script>
+function showReceipt(element) {
+  const dialog = document.getElementById('receiptDialog');
+  const content = document.getElementById('receiptContent');
+  
+  // Get data from the clicked element
+  const company = element.getAttribute('data-company');
+  const amount = element.getAttribute('data-amount');
+  const block = element.getAttribute('data-block');
+  const status = element.getAttribute('data-status');
+  
+  // Create receipt content
+  content.innerHTML = `
+    <div class="tw-flex tw-justify-between">
+      <span class="tw-text-gray-600 dark:tw-text-moon-200">Empresa:</span>
+      <span class="tw-font-medium dark:tw-text-moon-50">${company}</span>
+    </div>
+    <div class="tw-flex tw-justify-between">
+      <span class="tw-text-gray-600 dark:tw-text-moon-200">Bloque:</span>
+      <span class="tw-font-medium dark:tw-text-moon-50">#${block}</span>
+    </div>
+    <div class="tw-flex tw-justify-between">
+      <span class="tw-text-gray-600 dark:tw-text-moon-200">Monto:</span>
+      <span class="tw-font-medium dark:tw-text-moon-50">$${amount} MXN</span>
+    </div>
+    <div class="tw-flex tw-justify-between">
+      <span class="tw-text-gray-600 dark:tw-text-moon-200">Estado:</span>
+      <span class="tw-font-medium tw-text-blue-600 dark:tw-text-blue-400">${status}</span>
+    </div>
+  `;
+  
+  dialog.showModal();
+}
+
+function closeDialog() {
+  const dialog = document.getElementById('receiptDialog');
+  dialog.close();
+}
+
+function handlePayment() {
+  alert('Procesando pago...');
+  closeDialog();
+}
+</script>
 </body>
 </html>
