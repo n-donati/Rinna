@@ -1,4 +1,3 @@
-
 import base64
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
@@ -44,9 +43,25 @@ def pool(request):
     # Using aggregate to sum up the 'monto' field of filtered facturas
     poolSize = facturas.aggregate(total_monto=Sum('monto'))['total_monto']
 
-    if poolSize is None:
-        print("No facturas found for the deudor.")
-        poolSize = 0  # If there are no facturas, set poolSize to 0 to avoid errors
+    if not poolSize:
+        # Handle empty database case
+        return render(request, 'pool.html', {
+            'calculatedInterest': "0%",
+            'firstLastInterest': "0%",
+            'secondLastInterest': "0%",
+            'thirdLastInterest': "0%",
+            'fourthLastInterest': "0%",
+            'fifthLastInterest': "0%",
+            'poolSize': 0,
+            'subdivision1': 0,
+            'subdivision2': 0,
+            'subdivision3': 0,
+            'subdivision4': 0,
+            'percentage1': 0,
+            'percentage2': 0,
+            'percentage3': 0,
+            'percentage4': 0,
+        })
 
     print("poolsize", poolSize)
     
@@ -76,27 +91,40 @@ def pool(request):
     percentage3 = round(subdivision3 / poolSize * 100, 2)  
     percentage4 = round(subdivision4 / poolSize * 100, 2)
     
-    puja_actual = Facturas.objects.first().interes_firmado
+    # Get puja_actual safely
+    try:
+        puja_actual = Facturas.objects.first().interes_firmado
+    except (Facturas.DoesNotExist, AttributeError):
+        puja_actual = Decimal('0.0000000000')
 
     # Create a pool for each subdivision in assigned_pools
     pool_instances = {}
     for pool_name in ['pool1', 'pool2', 'pool3', 'pool4']:
-        pool_instance, created = Pool.objects.get_or_create(
-            deudor=deudor,
-            tamaño=assigned_pools[pool_name]['current_total'],
-            fecha_registro=datetime.now(),
-            puja_actual=puja_actual,
-            fecha_puja_actual=datetime.now()
-        )
-        pool_instance.save()
-        pool_instances[pool_name] = pool_instance
+        try:
+            pool_instance, created = Pool.objects.get_or_create(
+                deudor=deudor,
+                tamaño=assigned_pools[pool_name]['current_total'],
+                fecha_registro=datetime.now(),
+                puja_actual=puja_actual,
+                fecha_puja_actual=datetime.now()
+            )
+            pool_instance.save()
+            pool_instances[pool_name] = pool_instance
+        except Exception as e:
+            print(f"Error creating pool {pool_name}: {str(e)}")
+            continue
 
-    # Assign facturas to the correct pool
-    for pool_name, pool in assigned_pools.items():
-        for factura_id in pool['facturas']:
-            factura = Facturas.objects.get(id=factura_id)
-            factura.ID_pool = pool_instances[pool_name]
-            factura.save()
+    # Assign facturas only if we have valid pools
+    if pool_instances:
+        for pool_name, pool in assigned_pools.items():
+            if pool_name in pool_instances:
+                for factura_id in pool['facturas']:
+                    try:
+                        factura = Facturas.objects.get(id=factura_id)
+                        factura.ID_pool = pool_instances[pool_name]
+                        factura.save()
+                    except Facturas.DoesNotExist:
+                        continue
 
     return render(request, 'pool.html', {
         'calculatedInterest': calculatedInterest,
