@@ -113,8 +113,8 @@
      --bs-focus-ring-width: 0.25rem;
      --bs-focus-ring-opacity: 0.25;
      --bs-focus-ring-color: rgba(13, 110, 253, 0.25);
-     --bs-form-valid-color: #198754;
-     --bs-form-valid-border-color: #198754;
+     --bs-form-valid-color: #ff651d;
+     --bs-form-valid-border-color: #ff651D;
      --bs-form-invalid-color: #dc3545;
      --bs-form-invalid-border-color: #dc3545
  }
@@ -167,8 +167,8 @@
      --bs-code-color: #e685b5;
      --bs-border-color: #495057;
      --bs-border-color-translucent: rgba(255, 255, 255, 0.15);
-     --bs-form-valid-color: #75b798;
-     --bs-form-valid-border-color: #75b798;
+     --bs-form-valid-color: #ff651d;
+     --bs-form-valid-border-color: #ff651d;
      --bs-form-invalid-color: #ea868f;
      --bs-form-invalid-border-color: #ea868f
  }
