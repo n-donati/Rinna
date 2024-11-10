@@ -19,7 +19,21 @@ def home(request):
     return render(request, 'home.html')
 
 def market(request):
-    return render(request, 'market.html')
+    # Check if database is empty and seed if necessary
+    if not Facturas.objects.exists():
+        seed_database()
+    
+    tasaInicial = Facturas.objects.first().interes_firmado    
+    if not Pool.objects.exists():
+        tasaActual = tasaInicial
+    tasaActual = Pool.objects.first().puja_actual
+    cantidadFacturas = Facturas.objects.count()
+    volumenFacturas = Facturas.objects.aggregate(total_monto=Sum('monto'))['total_monto']
+
+    return render(request, 'market.html', {'tasaInicial':round(tasaInicial, 2),
+                                           'tasaActual':round(tasaActual, 2), 
+                                           'cantidadFacturas':cantidadFacturas,
+                                           'volumenFacturas':round(volumenFacturas, 2)})
 
 def dashboard(request):
     return render(request, 'dashboard.html')
@@ -58,10 +72,6 @@ def seed_database():
 
 def pool(request):
     deudor = "Costco"
-    
-    # Check if database is empty and seed if necessary
-    if not Facturas.objects.exists():
-        seed_database()
     
     if request.method == "POST":
         # find factor
