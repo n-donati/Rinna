@@ -28,4 +28,7 @@ COPY . /app/
 EXPOSE 8000
 
 # Run migrations and start Django using Gunicorn
+RUN python manage.py makemigrations app
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 CMD ["gunicorn", "rinna.wsgi:application", "--bind", "0.0.0.0:8000"]

@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-e@lpopmb+1m%6&gq8(1pr700o7v8$+k%(w*(!s5s&$4u+n=0bh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['rinna.up.railway.app', '0.0.0.0']
+
 
 # Application definition
 
