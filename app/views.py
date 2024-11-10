@@ -1,4 +1,14 @@
-from django.shortcuts import render
+import base64
+from django.shortcuts import render, redirect
+from django.http import JsonResponse, HttpResponse
+from django.core.files.storage import FileSystemStorage
+from django.contrib import messages
+import xml.etree.ElementTree as ET
+import os
+from .interest.contract import create_rtf_file
+from decimal import Decimal
+from django.utils import timezone
+from .models import Cedente, Factor, Pool, Facturas
 from .models import Facturas, Pool, Factor
 from django.db.models import Sum
 from datetime import datetime
