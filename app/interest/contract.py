@@ -113,4 +113,4 @@ def create_rtf_file(cedente, fecha, total, domicilio, interestRate):
                     
                     ______________________""")
 
-    doc.save("miContrato.rtf", aw.SaveFormat.RTF)
+    doc.save("NUEVOCONTRATO.rtf", aw.SaveFormat.RTF)
