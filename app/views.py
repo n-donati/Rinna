@@ -74,7 +74,7 @@ def upload_xml(request):
     if request.method == 'POST' and request.FILES.get('xmlFile'):
         try:
             xml_file = request.FILES['xmlFile']
-            xml_content = xml_file.read()  
+            xml_content = xml_file.read()
             
             # Create a BytesIO object for parsing
             from io import BytesIO
@@ -84,19 +84,17 @@ def upload_xml(request):
             invoice_data = parse_invoice(xml_for_parsing)
             interest_rate = calculate_interest(invoice_data)
             
-            # Get or create Cedente
+            # Get or create database objects
             cedente_obj, _ = Cedente.objects.get_or_create(
                 cedente=invoice_data['cedente'],
                 defaults={'rfc': invoice_data['rfcCedente']}
             )
             
-            # Get or create Factor
             factor_obj = Factor.objects.first() or Factor.objects.create(
                 factor='Default Factor',
                 rfc='DEFAULT000000'
             )
             
-            # Create Pool
             pool_obj = Pool.objects.create(
                 deudor=invoice_data['deudor'],
                 tamaño=Decimal(invoice_data['total']).quantize(Decimal('0.01')),
@@ -104,19 +102,18 @@ def upload_xml(request):
                 ID_factor=factor_obj
             )
             
-            # Create contract content as a simple string
-            contract_content = f"""CONTRATO DE CESION DE DERECHOS DE COBRO
-            
+            # Generate contract text first as string
+            contract_text = f"""CONTRATO DE CESION DE DERECHOS DE COBRO
+
 Cedente: {invoice_data['cedente']}
 Fecha: {invoice_data['fechaEmision']}
 Monto: ${invoice_data['total']}
 Domicilio: {invoice_data.get('domicilioFiscalReceptor', 'N/A')}
 Tasa de Interés: {interest_rate}%
 
-[Este es un contrato simplificado para demostración]
-            """.encode('utf-8')
+[Este es un contrato simplificado para demostración]"""
             
-            # Create Facturas entry
+            # Create Facturas entry with properly encoded content
             factura = Facturas(
                 ID_cedente=cedente_obj,
                 ID_pool=pool_obj,
@@ -126,12 +123,12 @@ Tasa de Interés: {interest_rate}%
                 monto=Decimal(invoice_data['total']).quantize(Decimal('0.00001')),
                 plazo=int(invoice_data['plazo']),
                 interes_firmado=Decimal(str(interest_rate)).quantize(Decimal('0.0000000000')),
-                contrato=contract_content
+                contrato=contract_text.encode('utf-8')  # Explicitly encode as UTF-8
             )
             factura.save()
             
-            # Return the contract as a direct download
-            response = HttpResponse(contract_content, content_type='text/plain')
+            # Return the contract as a text file download
+            response = HttpResponse(contract_text, content_type='text/plain; charset=utf-8')
             response['Content-Disposition'] = 'attachment; filename="contrato.txt"'
             return response
             
