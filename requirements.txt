@@ -9,7 +9,7 @@ flatbuffers==24.3.25
 gast==0.6.0
 google-pasta==0.2.0
 grpcio==1.67.1
-gunicorn
+gunicorn==21.2.0
 h5py==3.12.1
 idna==3.10
 keras==3.6.0
@@ -27,6 +27,7 @@ packaging==24.1
 pillow==11.0.0
 protobuf==5.28.3
 Pygments==2.18.0
+pyOpenSSL==24.0.0
 requests==2.32.3
 rich==13.9.4
 setuptools==75.3.0
