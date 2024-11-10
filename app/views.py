@@ -1,5 +1,6 @@
+import base64
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, FileResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 import xml.etree.ElementTree as ET
@@ -28,16 +29,14 @@ def is_valid_xml(file):
     try:
         tree = ET.parse(file)
         root = tree.getroot()
-        # Add any specific XML validation logic here
-        # For example, check for required elements
         return True
     except ET.ParseError:
         return False
     except Exception:
         return False
 
-def parse_invoice(file_path):
-    tree = ET.parse(file_path)
+def parse_invoice(xml_file):
+    tree = ET.parse(xml_file)
     root = tree.getroot()
     
     namespaces = {'cfdi': 'http://www.sat.gob.mx/cfd/4'}
@@ -62,92 +61,81 @@ def parse_invoice(file_path):
     
     return invoice_data
 
-def calculateInterest(invoice_data):
+def calculate_interest(invoice_data):
     interest_rate = 0.02
     delta_days = float(invoice_data['plazo'])
     interest_amount = (float(invoice_data['total']) * delta_days / 365) * (interest_rate / 100)
     return interest_amount + 4
 
-def create_rtf_contract(invoice_data, interest_rate):
+def create_contract(cedente, fecha, total, domicilio, interest_rate):
     doc = aw.Document()
     builder = aw.DocumentBuilder(doc)
 
-    font = builder.font
-    font.name = "Arial"
-    font.size = 12
+    builder.font.name = "Arial"
+    builder.font.size = 12
     builder.paragraph_format.alignment = aw.ParagraphAlignment.JUSTIFY
+
+    builder.font.bold = True
+    builder.writeln("CONTRATO DE CESION DE DERECHOS DE COBRO\n")
     
-    # Add contract header
-    font.bold = True
-    builder.writeln("CONTRATO DE CESION DE DERECHOS DE COBRO")
-    
-    # Add contract body using invoice data
     builder.font.bold = False
-    builder.writeln(f"""CONTRATO DE CESIÓN DE DERECHO DE COBRO ADELANTADO QUE CELEBRAN POR UNA PARTE {invoice_data['cedente']}; 
-                    A QUIEN EN LO SUCESIVO SE LE DENOMINARÁ COMO "LA PARTE CEDENTE"...""")
+    builder.writeln(f"CONTRATO DE CESIÓN DE DERECHO DE COBRO ADELANTADO QUE CELEBRAN POR UNA PARTE {cedente}; A QUIEN EN LO SUCESIVO SE LE DENOMINARÁ COMO \"LA PARTE CEDENTE\"...")
     
-    # Add all contract sections using invoice_data
-    builder.writeln(f"""I.- Que {invoice_data['cedente']} el día {invoice_data['fechaEmision']} contrajo una deuda 
-                    por la cantidad de ${invoice_data['total']} pesos mexicanos (MXN)...""")
+    builder.font.bold = True
+    builder.writeln("\nDECLARA \"LA PARTE CEDENTE\"")
     
-    # Add more contract sections here using invoice_data and interest_rate
+    builder.font.bold = False
+    builder.writeln(f"""I.- Que {cedente} el día {fecha} contrajo una deuda por la cantidad de ${total} pesos mexicanos (MXN)...""")
     
-    contract_path = os.path.join('uploads', 'contracts', f'contract_{invoice_data["numeroFactura"]}.rtf')
-    doc.save(contract_path, aw.SaveFormat.RTF)
-    return contract_path
+    output_path = "contract.rtf"
+    doc.save(output_path, aw.SaveFormat.RTF)
+    return output_path
 
 def upload_xml(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.FILES.get('xmlFile'):
         try:
-            if 'xmlFile' not in request.FILES:
-                messages.error(request, 'No se seleccionó ningún archivo')
-                return redirect('dashboard')
-                
             xml_file = request.FILES['xmlFile']
             
-            if xml_file.size > 5 * 1024 * 1024:  # 5MB limit
-                messages.error(request, 'El archivo es demasiado grande. Tamaño máximo: 5MB')
-                return redirect('dashboard')
+            # Create temp directory if it doesn't exist
+            if not os.path.exists('temp'):
+                os.makedirs('temp')
             
-            if not xml_file.name.endswith('.xml'):
-                messages.error(request, 'El archivo debe ser un XML válido')
-                return redirect('dashboard')
-                
-            upload_dir = 'uploads/xml_files'
-            contract_dir = 'uploads/contracts'
-            os.makedirs(upload_dir, exist_ok=True)
-            os.makedirs(contract_dir, exist_ok=True)
+            # Save XML temporarily
+            file_path = os.path.join('temp', xml_file.name)
+            with open(file_path, 'wb+') as destination:
+                for chunk in xml_file.chunks():
+                    destination.write(chunk)
             
-            fs = FileSystemStorage(location=upload_dir)
-            filename = fs.save(xml_file.name, xml_file)
-            file_path = os.path.join(upload_dir, filename)
-            
-            # Process XML and create contract
+            # Process XML and generate contract
             invoice_data = parse_invoice(file_path)
-            interest_rate = calculateInterest(invoice_data)
-            contract_path = create_rtf_contract(invoice_data, interest_rate)
+            interest_rate = calculate_interest(invoice_data)
             
-            # Create response with contract file
-            with open(contract_path, 'rb') as contract_file:
-                response = HttpResponse(
-                    contract_file.read(),
-                    content_type='application/rtf'
-                )
-                response['Content-Disposition'] = f'attachment; filename=contract_{invoice_data["numeroFactura"]}.rtf'
-                
-            # Clean up files
-            if os.path.exists(file_path):
-                os.remove(file_path)
-            if os.path.exists(contract_path):
-                os.remove(contract_path)
-                
-            messages.success(request, 'Factura procesada exitosamente')
+            # Generate contract
+            contract_path = create_contract(
+                invoice_data['cedente'],
+                invoice_data['fechaEmision'],
+                invoice_data['total'],
+                invoice_data['domicilioFiscalReceptor'],
+                interest_rate
+            )
+            
+            # Prepare response
+            with open(contract_path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/rtf')
+                response['Content-Disposition'] = 'attachment; filename="contrato.rtf"'
+            
+            # Cleanup
+            os.remove(file_path)
+            os.remove(contract_path)
+            
             return response
             
         except Exception as e:
-            messages.error(request, f'Error al procesar el archivo: {str(e)}')
-            if 'file_path' in locals() and os.path.exists(file_path):
-                os.remove(file_path)
+            messages.error(request, f'Error: {str(e)}')
             return redirect('dashboard')
     
     return redirect('dashboard')
+
+def download_contract(request, filename):
+    # This function is no longer needed since we're handling the download in JavaScript
+    pass

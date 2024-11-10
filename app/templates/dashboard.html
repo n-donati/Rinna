@@ -557,16 +557,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="uploadForm" action="{% url 'upload_xml' %}" method="post" enctype="multipart/form-data">
+                <form id="uploadForm" action="{% url 'upload_xml' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="xmlFile" class="form-label">Seleccionar archivo XML</label>
                         <input type="file" class="form-control" id="xmlFile" name="xmlFile" accept=".xml" required>
-                        <div class="form-text">Tamaño máximo: 5MB. Solo archivos XML.</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-custom-primary">Subir</button>
+                        <button type="submit" class="btn btn-custom-primary" id="uploadBtn">Generar Contrato</button>
                     </div>
                 </form>
             </div>
@@ -574,51 +573,35 @@
     </div>
 </div>
 
+<!-- Simple form submit handler -->
 <script>
-document.getElementById('uploadForm').onsubmit = function(e) {
-    e.preventDefault();
-    const form = this;
-    const formData = new FormData(form);
-
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        credentials: 'same-origin'
-    }).then(response => {
-        // Close the modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
-        modal.hide();
-        
-        // Show success message
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'alert alert-success alert-dismissible fade show';
-        alertDiv.innerHTML = `
-            Factura procesada exitosamente
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
-        document.querySelector('.messages').appendChild(alertDiv);
-
-        // Handle file download
-        return response.blob();
-    }).then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'contract.rtf';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-    }).catch(error => {
-        console.error('Error:', error);
-    });
-
-    // Reset form
-    form.reset();
-    return false;
+document.getElementById('uploadForm').onsubmit = function() {
+    document.getElementById('uploadBtn').disabled = true;
+    document.getElementById('uploadBtn').innerHTML = 'Generando Contrato...';
+    
+    // Close modal after a short delay to allow the file download to start
+    setTimeout(function() {
+        $('#uploadModal').modal('hide');
+        document.getElementById('uploadBtn').disabled = false;
+        document.getElementById('uploadBtn').innerHTML = 'Generar Contrato';
+        document.getElementById('uploadForm').reset();
+    }, 1000);
+    
+    return true;
 };
 </script>
+
+<!-- Add this div for messages if not already present -->
+<div class="messages mt-3">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
 
 </body>
 
