@@ -3,7 +3,7 @@ FROM python:3.12-slim
 
 # Set environment variables to avoid any input prompts during installation
 ENV PYTHONUNBUFFERED=1
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true  # if .NET globalization issue
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
 
 # Install necessary system packages, including libssl and ICU for OpenSSL support
 RUN apt-get update && apt-get install -y \
