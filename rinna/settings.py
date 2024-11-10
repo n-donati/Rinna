@@ -44,6 +44,8 @@ INSTALLED_APPS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://rinna.com.mx',
+    'https://www.rinna.com.mx',
     'https://rinna.up.railway.app',
     'https://*.railway.app'
 ]
