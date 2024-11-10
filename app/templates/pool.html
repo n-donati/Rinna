@@ -1634,7 +1634,7 @@
                                  <div class="auction-header d-flex justify-content-between align-items-center">
                                      <div class="d-flex align-items-center gap-3">
                                          <i class="bi bi-building fs-4"></i>
-                                         <h5 class="mb-0 fw-bold" id="poolTitle">Pool Section</h5> 
+                                         <h5 class="mb-0 fw-bold" id="poolTitle">Bloque de subasta de factura</h5> 
                                      </div>
                                      <div class="d-flex align-items-center gap-4">
                                          <div class="d-flex align-items-center">
@@ -1648,14 +1648,14 @@
                                  <div class="modal-body p-4">
                                      <div class="row g-4">
                                          <div class="col-md-6">
-                                             <h5 class="mb-3">Current Pool Distribution</h5>
+                                             <p class="mb-3">Cierre de bloques de facturas a las 12:00:00am</p>
                                              <div id="poolDetails" class="mb-4">
                                                  <!-- Pool details will be populated dynamically -->
                                              </div>
                                              
                                              <div class="alert alert-info">
                                                  <i class="bi bi-info-circle me-2"></i>
-                                                 Minimum bid: 0.1%
+                                                 Decremento de tasa mínimo: 0.1%
                                              </div>
                                          </div>
                                          
@@ -1664,30 +1664,33 @@
                                                  <div class="d-flex justify-content-between align-items-center">
                                                      <div>
                                                          <i class="bi bi-trophy me-2"></i>
-                                                         Highest Bid
+                                                         Puja para ganar
                                                      </div>
                                                      <h4 class="mb-0" id="highestBid">--</h4>
                                                  </div>
                                              </div>
                                              
                                              <div class="bid-history mb-4">
-                                                 <h6 class="mb-3">Recent Bids</h6>
+                                                 <h6 class="mb-3">Provea nueva tasa de interés:</h6>
                                                  <div id="bidHistory">
                                                      <!-- Bid history will be populated dynamically -->
                                                  </div>
                                              </div>
                                              
-                                             <form id="bidForm" class="mb-3">
-                                                 <div class="mb-3">
-                                                     <input type="number" 
+                                             <form method="post" id="bidForm" class="mb-3" action="{% url 'pool' %}">
+                                                {% csrf_token %}
+                                                <div class="mb-3">
+                                                   <input type="number" 
                                                             class="form-control bid-input" 
                                                             id="bidInput"
-                                                            placeholder="Enter your bid percentage"
+                                                            name="bid"
+                                                            placeholder="Coloque la reducción de tasa"
                                                             min="0.1"
-                                                            step="0.1"
+                                                            step="0.05"
+                                                            value="0.1"
                                                             required>
-                                                 </div>
-                                                 <button type="submit" class="submit-bid-btn w-100">Submit Bid</button>
+                                                </div>
+                                                <button type="submit" class="submit-bid-btn w-100">Aceptar Tasa</button>
                                              </form>
                                          </div>
                                      </div>
@@ -1696,7 +1699,7 @@
                          </div>
                      </div>
 
-                     <script>
+                     {% comment %} <script>
                          // Handle pool cell clicks
                          document.querySelectorAll('.fib-cell').forEach(cell => {
                              cell.addEventListener('click', function() {
@@ -1724,7 +1727,7 @@
                              
                              const bid = parseFloat(document.getElementById('bidInput').value);
                              if(bid < 0.1) {
-                                 alert('Minimum bid is 0.1%');
+                                 alert('Decremento mínimo es 0.1%');
                                  return;
                              }
                              
@@ -1749,7 +1752,7 @@
                              // Reset input
                              document.getElementById('bidInput').value = '';
                          });
-                     </script>
+                     </script> {% endcomment %}
    
                         <!-- Add modal for pool sections -->
                         <div class="modal fade" id="auctionModal" tabindex="-1">
@@ -1758,12 +1761,12 @@
                                  <div class="auction-header d-flex justify-content-between align-items-center">
                                     <div class="d-flex align-items-center gap-3">
                                        <i class="bi bi-building fs-4"></i>
-                                       <h5 class="mb-0 fw-bold">Pool Section</h5>
+                                       <h5 class="mb-0 fw-bold">SIU Section</h5>
                                     </div>
                                     <div class="d-flex align-items-center gap-4">
                                        <div class="d-flex align-items-center">
                                           <i class="bi bi-star-fill text-warning me-2"></i>
-                                          <span id="poolPercentage">42%</span>
+                                          <span id="">{{percentage1}}%</span>
                                        </div>
                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                     </div>
@@ -1782,12 +1785,12 @@
                                     <div class="auction-header d-flex justify-content-between align-items-center">
                                         <div class="d-flex align-items-center gap-3">
                                             <i class="bi bi-building fs-4"></i>
-                                            <h5 class="mb-0 fw-bold" id="poolTitle">Pool Section</h5> 
+                                            <h5 class="mb-0 fw-bold" id="poolTitle">Pool SE</h5> 
                                         </div>
                                         <div class="d-flex align-items-center gap-4">
                                             <div class="d-flex align-items-center">
                                                 <i class="bi bi-star-fill text-warning me-2"></i>
-                                                <span id="poolPercentage">0%</span>
+                                                <span id="">0%</span>
                                             </div>
                                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                         </div>
@@ -1795,8 +1798,8 @@
 
                                     <div class="modal-body p-4">
                                         <div class="row g-4">
-                                            <div class="col-md-6">
-                                                <h5 class="mb-3">Current Pool Distribution</h5>
+                                            {% comment %} <div class="col-md-6">
+                                                <h5 class="mb-3">CU Pool Distribution</h5>
                                                 <div id="poolDetails" class="mb-4">
                                                     <!-- Pool details will be populated dynamically -->
                                                 </div>
@@ -1805,9 +1808,9 @@
                                                     <i class="bi bi-info-circle me-2"></i>
                                                     Minimum bid: 0.1%
                                                 </div>
-                                            </div>
+                                            </div> {% endcomment %}
                                             
-                                            <div class="col-md-6">
+                                            {% comment %} <div class="col-md-6">
                                                 <div class="highest-bid-card">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div>
@@ -1837,14 +1840,14 @@
                                                     </div>
                                                     <button type="submit" class="submit-bid-btn w-100">Submit Bid</button>
                                                 </form>
-                                            </div>
+                                            </div> {% endcomment %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <script>
+                        {% comment %} <script>
                             // Initialize bid history
                             let bids = [];
 
@@ -1856,7 +1859,7 @@
                                     
                                     // Update modal content
                                     document.getElementById('poolPercentage').textContent = percent + '%';
-                                    document.getElementById('poolTitle').textContent = 'Pool Section ' + percent + '%';
+                                    document.getElementById('poolTitle').textContent = 'Interfaz de puja ' + percent + '%';
                                     
                                     // Show pool details
                                     document.getElementById('poolDetails').innerHTML = `
@@ -1875,7 +1878,7 @@
                                 
                                 const bid = parseFloat(document.getElementById('bidInput').value);
                                 if(bid < 0.1) {
-                                    alert('Minimum bid is 0.1%');
+                                    alert('Decremento de tasa mínimo: 0.1%');
                                     return;
                                 }
                                 
@@ -1900,7 +1903,7 @@
                                 // Reset input
                                 document.getElementById('bidInput').value = '';
                             });
-                        </script>
+                        </script> {% endcomment %}
                      <div data-view-component="true" class="tw-relative 2lg:tw-mb-6 tw-grid tw-grid-cols-1 tw-divide-y tw-divide-gray-200 dark:tw-divide-moon-700 [&amp;&gt;*:last-child]:!tw-border-b">
                         
                      </div>
