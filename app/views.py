@@ -79,10 +79,12 @@ def pool(request):
                     ID_factor=Factor.objects.first(),
                     estado_puja=True
                 )
-                
+
                 # Update pool's current bid
                 pool.puja_actual = pool.puja_actual -  Decimal(bid_value)
-                pool.fecha_puja_actual = datetime.now()
+                current_time = timezone.now()
+                formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S.%f')
+                pool.fecha_puja_actual = formatted_time
                 pool.save()
                 factor = "Bancomer"
             except (Factor.DoesNotExist, Pool.DoesNotExist):
@@ -159,6 +161,10 @@ def pool(request):
         'factor': factor,
         'volumenFacturas': len(facturas),
         'horaPuja1': Pool.objects.get(id=1).fecha_puja_actual,
+        'fechaVencimientoSubasta': datetime.now()
+    .replace(hour=23, minute=59, second=59),
+    'plazoMedioDePago': facturas.aggregate(promedio_plazo=Sum('plazo') / len(facturas))['promedio_plazo'],
+    'ofertasTotales': Puja.objects.count(),
     })
 
 def assign_pools(poolSize, facturas):

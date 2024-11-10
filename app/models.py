@@ -28,7 +28,7 @@ class Pool(models.Model):
     fecha_registro = models.DateField(auto_now_add=True)
     # puja mas alta hasta el momento
     puja_actual = models.DecimalField(max_digits=12, decimal_places=10)
-    fecha_puja_actual = models.DateField(null=True, default=None)  # Changed to allow null
+    fecha_puja_actual = models.DateTimeField(null=True, default=None)  # Changed to allow null
 
 class Facturas(models.Model):
     # cedente al que pertenece
