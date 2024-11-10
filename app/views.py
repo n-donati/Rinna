@@ -26,7 +26,11 @@ def market(request):
     tasaInicial = Facturas.objects.first().interes_firmado    
     if not Pool.objects.exists():
         tasaActual = tasaInicial
-    tasaActual = Pool.objects.first().puja_actual
+    
+    try:
+        tasaActual = Pool.objects.first().puja_actual
+    except:
+        tasaActual = Facturas.objects.first().interes_firmado
     cantidadFacturas = Facturas.objects.count()
     volumenFacturas = Facturas.objects.aggregate(total_monto=Sum('monto'))['total_monto']
 
@@ -67,7 +71,7 @@ def seed_database():
                 domicilio_deudor="Sample Address",
                 monto=Decimal(random.uniform(5000, 10000)),
                 plazo=30,
-                interes_firmado=Decimal('4.0')
+                interes_firmado=Decimal('2.5')
             )
 
 def pool(request):

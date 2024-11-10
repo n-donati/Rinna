@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -472,7 +472,7 @@
 						width: '400px',
 						height: '400px',
 						display: 'grid',
-						gridTemplateColumns: `repeat(${size}, 1fr)`,
+						gridTemplateColumns: repeat(${size}, 1fr),
 						gap: '1px',
 						borderRadius: '8px',
 						overflow: 'hidden',
@@ -492,12 +492,12 @@
 							}
 
 							// Calculate color based on max intensity
-							const color = `rgba(255, 0, 0, ${maxIntensity * 0.7})`;
+							const color = rgba(255, 0, 0, ${maxIntensity * 0.7});
 
 							// Base cream color
 							const baseCream = 245;
 							const creamVariation = Math.floor(Math.random() * 10);
-							const creamColor = `rgb(${baseCream - creamVariation}, ${baseCream - creamVariation - 10}, ${baseCream - creamVariation - 20})`;
+							const creamColor = rgb(${baseCream - creamVariation}, ${baseCream - creamVariation - 10}, ${baseCream - creamVariation - 20});
 
 							// Apply styles to cell
 							Object.assign(cell.style, {
@@ -625,7 +625,7 @@ function addNavItem(facturaId, monto) {
     const textSpan = document.createElement('span');
     textSpan.classList.add('nav-link-text');
     textSpan.dataset.invoiceId = facturaId;
-    textSpan.textContent = `$${monto} -- ${facturaId}`;
+    textSpan.textContent = $${monto} -- ${facturaId};
 
     // Assemble the elements
     navLink.appendChild(iconSpan);
