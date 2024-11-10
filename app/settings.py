@@ -1,3 +1,4 @@
+
 """
 Django settings for rinna project.
 
@@ -134,14 +135,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-
-# Add these settings after the STATIC_URL and related settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# Ensure uploaded files have correct permissions
-FILE_UPLOAD_PERMISSIONS = 0o644
-FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o755
 
 # Simple storage backend
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
