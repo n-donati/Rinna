@@ -529,6 +529,17 @@ dialog {
     <button onclick="handlePayment()" class="tw-bg-primary-500 tw-text-white tw-py-2 tw-px-4 tw-rounded-lg hover:tw-bg-primary-600 tw-transition-colors">
       Proceder al Pago
     </button>
+    
+    <script>
+      function handlePayment() {
+        <!-- ...existing code... -->
+        const paymentStatusSpan = document.querySelector('.tw-text-xs.tw-font-medium.tw-text-blue-600.dark\\:tw-text-blue-400');
+        if (paymentStatusSpan) {
+          paymentStatusSpan.textContent = 'PAGADO';
+        }
+        <!-- ...existing code... -->
+      }
+    </script>
   </div>
 </dialog>
 

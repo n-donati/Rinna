@@ -329,10 +329,7 @@ def upload_xml(request):
             # Prepare response
             response = HttpResponse(contract_content, content_type='application/rtf')
             response['Content-Disposition'] = 'attachment; filename="contrato.rtf"'
-            
-            # Cleanup
-            os.remove(contract_path)
-            
+            request.session['contract_created'] = True
             return response
             
         except Exception as e:
@@ -344,3 +341,10 @@ def upload_xml(request):
 def download_contract(request, filename):
     # This function is no longer needed since we're handling the download in JavaScript
     pass
+
+def simulate_upload_contract(request):
+    # Simulate the contract upload process
+    # Clear the session variable if needed
+    request.session['contract_created'] = False
+    messages.success(request, 'Contrato subido excitosamente.')
+    return redirect('dashboard')
