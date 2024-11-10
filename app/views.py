@@ -261,3 +261,77 @@ def calculate_interest(invoice_data):
     delta_days = float(invoice_data['plazo'])
     interest_amount = (float(invoice_data['total']) * delta_days / 365) * (interest_rate / 100)
     return interest_amount + 4
+
+def upload_xml(request):
+    if request.method == 'POST' and request.FILES.get('xmlFile'):
+        try:
+            xml_file = request.FILES['xmlFile']
+            xml_content = xml_file.read()
+            
+            # Parse XML
+            xml_for_parsing = BytesIO(xml_content)
+            try:
+                invoice_data = parse_invoice(xml_for_parsing)
+                interest_rate = calculate_interest(invoice_data)
+            except ET.ParseError:
+                messages.error(request, 'Invalid XML file format')
+                return redirect('dashboard')
+            
+            # Generate contract
+            contract_path = "NUEVOCONTRATO.rtf"
+            try:
+                create_rtf_file(
+                    invoice_data['cedente'],
+                    invoice_data['fechaEmision'],
+                    invoice_data['total'],
+                    invoice_data['domicilioFiscalReceptor'],
+                    interest_rate
+                )
+            except Exception as e:
+                messages.error(request, f'Error generating contract: {str(e)}')
+                return redirect('dashboard')
+            
+            try:
+                with transaction.atomic():
+                    # Get or create Cedente
+                    cedente_obj, _ = Cedente.objects.get_or_create(
+                        cedente=invoice_data['cedente'],
+                        defaults={'rfc': invoice_data['rfcCedente']}
+                    )
+                    
+                    # Create Factura (without Pool)
+                    with open(contract_path, 'rb') as contract_file:
+                        contract_content = contract_file.read()
+                        factura = Facturas.objects.create(
+                            ID_cedente=cedente_obj,
+                            domicilio_deudor=invoice_data['domicilioFiscalReceptor'],
+                            deudor=invoice_data['deudor'],
+                            xml=xml_content,
+                            monto=Decimal(invoice_data['total']),
+                            plazo=int(invoice_data['plazo']),
+                            interes_firmado=Decimal(str(interest_rate)),
+                            contrato=contract_content,
+                            ID_pool=None  # Explicitly set Pool to None
+                        )
+                
+                # Prepare response with contract
+                response = HttpResponse(contract_content, content_type='application/rtf')
+                response['Content-Disposition'] = 'attachment; filename="contrato.rtf"'
+                
+                # Clean up temporary file
+                if os.path.exists(contract_path):
+                    os.remove(contract_path)
+                
+                return response
+                
+            except Exception as e:
+                if os.path.exists(contract_path):
+                    os.remove(contract_path)
+                messages.error(request, f'Database error: {str(e)}')
+                return redirect('dashboard')
+                
+        except Exception as e:
+            messages.error(request, f'General error: {str(e)}')
+            return redirect('dashboard')
+    
+    return redirect('dashboard')
