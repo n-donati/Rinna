@@ -270,29 +270,12 @@ def upload_xml(request):
                 defaults={'rfc': invoice_data['rfcCedente']}
             )
             
-            # Get or create Factor
-            factor_obj = Factor.objects.first()
-            if not factor_obj:
-                factor_obj = Factor.objects.create(
-                    factor='Default Factor',
-                    rfc='DEFAULT000000'
-                )
-            
-            # Create Pool
-            pool_obj = Pool.objects.create(
-                deudor=invoice_data['deudor'],
-                tamaño=Decimal(invoice_data['total']).quantize(Decimal('0.01')),
-                puja_actual=Decimal('0.0000000000'),
-                ID_factor=factor_obj
-            )
-            
             # Create Facturas with the XML blob
             with open(contract_path, 'rb') as contract_file:
                 contract_content = contract_file.read()
                 
                 factura = Facturas(
                     ID_cedente=cedente_obj,
-                    ID_pool=pool_obj,
                     domicilio_deudor=invoice_data.get('domicilioFiscalReceptor'),
                     deudor=invoice_data['deudor'],
                     xml=xml_content,
@@ -306,7 +289,6 @@ def upload_xml(request):
             # Prepare response
             response = HttpResponse(contract_content, content_type='application/rtf')
             response['Content-Disposition'] = 'attachment; filename="contrato.rtf"'
-            request.session['contract_created'] = True
             return response
             
         except Exception as e:
