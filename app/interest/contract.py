@@ -1,18 +1,4 @@
-from calculateRate import parse_invoice, calculateInterest 
 import aspose.words as aw
-
-# def read_and_print_rtf(filepath):
-#     try:
-#         with open(filepath, 'r') as file:
-#             rtf_content = file.read()
-#         text = rtf_to_text(rtf_content)
-#         print(text)
-#     except FileNotFoundError:
-#         print("The file was not found.")
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
-
-# read_and_print_rtf('contrato.rtf')
 
 def create_rtf_file(cedente, fecha, total, domicilio, interestRate):
     doc = aw.Document()
@@ -99,7 +85,7 @@ def create_rtf_file(cedente, fecha, total, domicilio, interestRate):
     builder.font.bold = True
     builder.writeln(f"""LA PARTE CEDENTE
                     
-                    
+
                     _______________________
                     {cedente}""")
     
@@ -111,14 +97,7 @@ def create_rtf_file(cedente, fecha, total, domicilio, interestRate):
     builder.font.bold = True
     builder.writeln("""LA PARTE CESIONARIA
                     
-                    
+
                     ______________________""")
 
-    doc.save("miContrato.rtf", aw.SaveFormat.RTF)
-
-# ejemplo de uso
-invoice_data = parse_invoice('facturaSimple.xml')
-print(invoice_data)
-interestRate = calculateInterest(invoice_data)
-print(interestRate)
-create_rtf_file(invoice_data['cedente'], invoice_data['fechaEmision'], invoice_data['total'], invoice_data['domicilioFiscalReceptor'], interestRate)
+    doc.save("NUEVOCONTRATO.rtf", aw.SaveFormat.RTF)

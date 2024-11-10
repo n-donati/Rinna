@@ -22,9 +22,9 @@ class Pool(models.Model):
     tamaño = models.DecimalField(max_digits=15, decimal_places=2)
     fecha_registro = models.DateField(auto_now_add=True)
     # puja mas alta hasta el momento
-    puja_actual = models.DecimalField(max_digits=12, decimal_places=10)
+    puja_actual = models.DecimalField(max_digits=12, decimal_places=10, null=True, blank=True)
     # factor a la que pertenece puja actual
-    ID_factor = models.ForeignKey(Factor, on_delete=models.CASCADE)
+    ID_factor = models.ForeignKey(Factor, on_delete=models.CASCADE, null=True, blank=True)
     fecha_puja_actual = models.DateField(auto_now_add=True)
 
 class Facturas(models.Model):
@@ -38,7 +38,7 @@ class Facturas(models.Model):
     # plazo de pago, para hacer display en el pool
     plazo = models.IntegerField()
     interes_firmado = models.DecimalField(max_digits=12, decimal_places=10)
-    contrato = models.BinaryField()
+    contrato = models.BinaryField(null=True, blank=True)
 
 class Puja(models.Model):
     ID_pool = models.ForeignKey(Pool, on_delete=models.CASCADE)
