@@ -1,3 +1,4 @@
+
 {%load static%}
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +34,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	<style>
 		.green-icon {
-			color: #ff651d;
+			color: green;
 		}
 		.red-icon {
 			color: rgb(189, 25, 25);
@@ -44,8 +45,8 @@
 			color: white;
 		}
 		.btn-custom-primary:hover {
-			background-color: #c99b79;
-			border-color: #c99b79;
+			background-color: #a07676;
+			border-color: #a07676;
 			color: white;
 		}
 		.btn-custom-secondary {
@@ -54,8 +55,8 @@
 			color: white;
 		}
 		.btn-custom-secondary:hover {
-			background-color: #c13333;
-			border-color: #c13333;
+			background-color: #a70000;
+			border-color: #a70000;
 			color: white;
 		}
 		.modal-custom {
@@ -119,9 +120,6 @@
         Ingresar Nueva Factura
     </button>
     <button class="btn btn-custom-secondary me-2">Eliminar Factura</button>
-        <button type="button" class="btn btn-custom-primary me-2" data-bs-toggle="modal" data-bs-target="#uploadContractModal">
-            Subir Contrato
-        </button>
 							</div>
 							
 							<div class="col-auto ms-auto"> <!-- Right-aligned utilities -->
@@ -144,7 +142,7 @@
 									<div class="app-utility-item app-user-dropdown dropdown">
 										<a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
 											role="button" aria-expanded="false">
-											<img src="{% static 'svg/profile.svg' %}" alt="user profile">
+											<img src="{% static 'assets/images/user.png' %}" alt="user profile">
 											{{ user.username }}
 										</a>
 										<ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
@@ -472,7 +470,7 @@
 						width: '400px',
 						height: '400px',
 						display: 'grid',
-						gridTemplateColumns: repeat(${size}, 1fr),
+						gridTemplateColumns: `repeat(${size}, 1fr)`,
 						gap: '1px',
 						borderRadius: '8px',
 						overflow: 'hidden',
@@ -492,12 +490,12 @@
 							}
 
 							// Calculate color based on max intensity
-							const color = rgba(255, 0, 0, ${maxIntensity * 0.7});
+							const color = `rgba(255, 0, 0, ${maxIntensity * 0.7})`;
 
 							// Base cream color
 							const baseCream = 245;
 							const creamVariation = Math.floor(Math.random() * 10);
-							const creamColor = rgb(${baseCream - creamVariation}, ${baseCream - creamVariation - 10}, ${baseCream - creamVariation - 20});
+							const creamColor = `rgb(${baseCream - creamVariation}, ${baseCream - creamVariation - 10}, ${baseCream - creamVariation - 20})`;
 
 							// Apply styles to cell
 							Object.assign(cell.style, {
@@ -545,7 +543,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="uploadForm">
+                <form id="uploadForm" action="{% url 'upload_xml' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="xmlFile" class="form-label">Seleccionar archivo XML</label>
@@ -553,7 +551,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-custom-primary" id="uploadBtn" onclick="handleXmlUpload(event)">Generar Contrato</button>
+                        <button type="submit" class="btn btn-custom-primary" id="uploadBtn">Generar Contrato</button>
                     </div>
                 </form>
             </div>
@@ -625,7 +623,7 @@ function addNavItem(facturaId, monto) {
     const textSpan = document.createElement('span');
     textSpan.classList.add('nav-link-text');
     textSpan.dataset.invoiceId = facturaId;
-    textSpan.textContent = $${monto} -- ${facturaId};
+    textSpan.textContent = `$${monto} -- ${facturaId}`;
 
     // Assemble the elements
     navLink.appendChild(iconSpan);
@@ -733,99 +731,6 @@ function showXmlDialog(event) {
         border-radius: 5px;
     }
 </style>
-<script>
-function simulateUploadContract() {
-    alert('Simulating contract upload...');
-    // Add your simulation logic here
-}
-</script>
-<!-- Replace the contract upload modal form -->
-<div class="modal fade" id="uploadContractModal" tabindex="-1" aria-labelledby="uploadContractModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="uploadContractModalLabel">Subir Contrato</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="uploadContractForm">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="contractFile" class="form-label">Seleccionar archivo de contrato</label>
-                        <input type="file" class="form-control" id="contractFile" name="contractFile" accept=".pdf,.doc,.docx,.rtf" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-custom-primary" onclick="handleContractUpload()">Subir Contrato</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-function handleContractUpload() {
-    // Simply close the modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadContractModal'));
-    modal.hide();
-    
-    // Reset the form
-    document.getElementById('uploadContractForm').reset();
-}
-</script>
-<script>
-function handleXmlUpload(event) {
-    event.preventDefault();
-    
-    const fileInput = document.getElementById('xmlFile');
-    const file = fileInput.files[0];
-    
-    if (file) {
-        // Disable button and show initial loading state
-        const uploadBtn = document.getElementById('uploadBtn');
-        uploadBtn.disabled = true;
-        uploadBtn.innerHTML = 'Analizando XML...';
-        
-        setTimeout(() => {
-            uploadBtn.innerHTML = 'Procesando Documento...';
-            
-            setTimeout(() => {
-                uploadBtn.innerHTML = 'Generando Contrato...';
-                
-                setTimeout(() => {
-                    // Generate random values for new nav item
-                    const facturaId = Math.random().toString(36).substr(2, 9);
-                    const monto = Math.floor(Math.random() * 900000 + 100000).toString();
-                    
-                    // Add new invoice to list
-                    addNavItem(facturaId, parseFloat(monto).toLocaleString());
-                    
-                    // Download NUEVOCONTRATO.rtf
-                    const link = document.createElement('a');
-                    link.href = '{% static "NUEVOCONTRATO.rtf" %}';
-                    link.download = 'NUEVOCONTRATO.rtf';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    // Update counter
-                    updateActiveInvoicesCount();
-                    
-                    // Close modal and reset form
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
-                    modal.hide();
-                    
-                    // Reset button state and form
-                    uploadBtn.disabled = false;
-                    uploadBtn.innerHTML = 'Generar Contrato';
-                    document.getElementById('uploadForm').reset();
-                }, 1000); // 1.5s for final generation
-            }, 1000); // 2s for processing
-        }, 1500); // 1.5s for initial analysis
-    }
-}
-</script>
 
 </body>
 

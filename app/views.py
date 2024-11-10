@@ -71,7 +71,7 @@ def seed_database():
                 domicilio_deudor="Sample Address",
                 monto=Decimal(random.uniform(5000, 10000)),
                 plazo=30,
-                interes_firmado=Decimal('4.0')
+                interes_firmado=Decimal('2.5')
             )
 
 def pool(request):
@@ -264,4 +264,4 @@ def calculate_interest(invoice_data):
     interest_rate = 0.02
     delta_days = float(invoice_data['plazo'])
     interest_amount = (float(invoice_data['total']) * delta_days / 365) * (interest_rate / 100)
-    return interest_amount + 2.2
+    return interest_amount + 4
