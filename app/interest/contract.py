@@ -1,19 +1,4 @@
-# # para leer archivos .rtf
-# from pyth.plugins.rtf15.reader import Rtf15Reader
-# from pyth.document import Document
-
-# try:
-#     # Leer un archivo RTF
-#     with open('contract.rtf', 'rb') as file:
-#         doc = Rtf15Reader.read(file)
-
-#     # Imprimir el contenido del documento
-#     for para in doc.content:
-#         print(''.join(element.content for element in para.content))
-# except Exception as e:
-#     print(f"Error reading RTF file: {e}")
-
-from striprtf.striprtf import rtf_to_text
+from calculateRate import parse_invoice, calculateInterest 
 import aspose.words as aw
 
 # def read_and_print_rtf(filepath):
@@ -29,34 +14,32 @@ import aspose.words as aw
 
 # read_and_print_rtf('contrato.rtf')
 
-def create_rtf_file(cedente, fecha, total, domicilio, ciudad):
-    # Crear un nuevo documento.
+def create_rtf_file(cedente, fecha, total, domicilio, interestRate):
     doc = aw.Document()
     builder = aw.DocumentBuilder(doc)
 
-    # Configurar los estilos del documento, similar a los encontrados en el RTF original
     font = builder.font
     font.name = "Arial"
     font.size = 12
     builder.paragraph_format.alignment = aw.ParagraphAlignment.JUSTIFY
     
-    # Restablecer para el texto normal del documento
     font.bold = True
     font.size = 12
-    builder.writeln("CONTRATO DE CESION DE DERECHOS DE COBRO")
+    builder.writeln("""CONTRATO DE CESION DE DERECHOS DE COBRO
+                    """)
     
-    # Set the text to be bold.
     builder.font.bold = False 
-    # Write a line of bold text.
+
     builder.writeln(f"CONTRATO DE CESIÓN DE DERECHO DE COBRO ADELANTADO QUE CELEBRAN POR UNA PARTE {cedente}; A QUIEN EN LO SUCESIVO SE LE DENOMINARÁ COMO \"LA PARTE CEDENTE\"; Y POR LA OTRA _______; A QUIEN EN LO SUCESIVO SE LE DENOMINARÁ COMO \"LA PARTE CESIONARIA\"; AMBOS CONTRATANTES DENOMINADOS DE MANERA CONJUNTA COMO \"LAS PARTES\", QUIENES SE OBLIGAN AL TENOR DE LOS SIGUIENTES ANTECEDENTES, DECLARACIONES Y CLÁUSULAS:")
     
     builder.font.bold = True
-    builder.writeln("DECLARA \"LA PARTE CEDENTE\"")
+    builder.writeln("""
+                    DECLARA \"LA PARTE CEDENTE\"""")
     
-    expediente = "000001"
+    expediente = "00001"
     # Set the text to be bold.
     builder.font.bold = False 
-    # Write a line of bold text.
+
     builder.writeln(f"I.- Que {cedente} el día {fecha} contrajo una deuda por la cantidad de ${total} pesos mexicanos (MXN), la cual está respaldada por un documento denominado pagaré; y el cual forma parte del presente contrato estando adjunto al mismo; y que \"LA PARTE CEDENTE\" está tratando de recobrar dicha deuda mediante un juicio al que le fue asignado el número de expediente {expediente}.")
     
     builder.writeln(f"II.- Con fecha {fecha} realizó un pago por la cantidad de ${total} pesos mexicanos (MXN).")
@@ -67,14 +50,18 @@ def create_rtf_file(cedente, fecha, total, domicilio, ciudad):
 
     V.- Que no existe ninguna acción, judicial o extrajudicial, o algún efecto que perjudique la titularidad o transferencia del derechos de cobro materia del presente contrato.
 
-    VI.- Tener su domicilio en {domicilio}, en la siguiente ciudad: {ciudad}, el cual en este acto señala para oír y recibir todo tipo de notificaciones y documentos.
+    VI.- Tener su domicilio en {domicilio}, el cual en este acto señala para oír y recibir todo tipo de notificaciones y documentos.
 
-    VII.- Que es su deseo ceder el derechos de cobro descrito en el presente contrato y que la \"PARTE CEDENTE\" tiene el derecho de cobrar y que es el objeto del mismo contrato.""")
+    VII.- Que es su deseo ceder el derechos de cobro descrito en el presente contrato y que la \"PARTE CEDENTE\" tiene el derecho de cobrar y que es el objeto del mismo contrato con una TASA DE INTERÉS MÁXIMA DE {interestRate} del total de la factura.
     
+    VIII.- Que es su deseo ceder el derecho de cobro con una COMISIÓN DE DESCUENTO MÁXIMA DE {interestRate}, siendo RINNA FACTORING SOLUTIONS autorizada para reducir la comisión de descuento a partir de la subasta de la factura.
+    
+    IX.- Que RINNA FACTORING SOLUTIONS se reserva el derecho de ofrecer el derecho de cobro a un tercero en el momento que el bloque de la factura sea liberado, y entonces pagar el costo de la factura.
+    """)
+        
     builder.font.bold = True
     builder.writeln("DECLARA \"LA PARTE CESIONARIA\"")
     
-    # Set the text to be bold.
     builder.font.bold = False 
     builder.writeln(
     """I.- Que \"LA PARTE CESIONARIA\" está plenamente facultada para la celebración del presente contrato y para asumir y dar cumplimiento a las obligaciones que en el mismo se establecen.
@@ -92,14 +79,22 @@ def create_rtf_file(cedente, fecha, total, domicilio, ciudad):
 
     VII.- Que \"LA PARTE CESIONARIA\" cuenta con todas las facultades para la celebración del presente contrato y no le han sido revocadas, modificadas o limitadas en forma alguna que afecte la validez del presente contrato.
 
-    VIII.- Tener su domicilio en _______, en la siguiente ciudad: _______, _______, el cual en este acto señala para oír y recibir todo tipo de notificaciones y documentos.
+    VIII.- Tener su domicilio en _______, el cual en este acto señala para oír y recibir todo tipo de notificaciones y documentos.
 
     VIII.- Que es su deseo adquirir el derechos de cobro descrito en el presente contrato y que la \"PARTE CEDENTE" tiene el derecho de cobrar y que es el objeto del mismo contrato.
 
     IX.- Que es su deseo adquirir el derechos de cobro mencionado en las declaraciones de \"LA PARTE CEDENTE\".""")
     
     builder.font.bold = False 
-    builder.writeln(f"""Leído que fue el presente contrato por las partes, una vez enteradas de su alcance y fuerza legal, no existiendo vicio de la voluntad que pudiera invalidarlo lo firman "LAS PARTES", por duplicado al margen y al calce, en la Ciudad de {ciudad}, el factor, recibiendo cada una de las partes en este acto copia del mismo.""")
+    builder.writeln(f"""Leído que fue el presente contrato por las partes, una vez enteradas de su alcance y fuerza legal, no existiendo vicio de la voluntad que pudiera invalidarlo lo firman "LAS PARTES", por duplicado al margen y al calce, a través de RINNA FACTORING SOLUTIONS, el factor, recibiendo cada una de las partes en este acto copia del mismo.
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    """)
     
     builder.font.bold = True
     builder.writeln(f"""LA PARTE CEDENTE
@@ -109,7 +104,9 @@ def create_rtf_file(cedente, fecha, total, domicilio, ciudad):
                     {cedente}""")
     
     builder.font.bold = False
-    builder.writeln("en representación de:")
+    builder.writeln("""
+                    en representación de:
+                    """)
     
     builder.font.bold = True
     builder.writeln("""LA PARTE CESIONARIA
@@ -117,13 +114,11 @@ def create_rtf_file(cedente, fecha, total, domicilio, ciudad):
                     
                     ______________________""")
 
-    # Guardar el documento en formato RTF
     doc.save("miContrato.rtf", aw.SaveFormat.RTF)
 
-fecha = "12 de enero de 2021"
-cedente = "Juan Pérez"
-total = "1000"
-domicilio = "Calle 123"
-ciudad = "Ciudad de México"
-
-create_rtf_file(cedente, fecha, total, domicilio, ciudad)
+# ejemplo de uso
+invoice_data = parse_invoice('facturaSimple.xml')
+print(invoice_data)
+interestRate = calculateInterest(invoice_data)
+print(interestRate)
+create_rtf_file(invoice_data['cedente'], invoice_data['fechaEmision'], invoice_data['total'], invoice_data['domicilioFiscalReceptor'], interestRate)
