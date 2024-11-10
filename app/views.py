@@ -151,9 +151,3 @@ def upload_xml(request):
             return redirect('dashboard')
     
     return redirect('dashboard')
-
-def download_contract(request, filename):
-    # This function is no longer needed since we're handling the download in JavaScript
-    pass
-
-
