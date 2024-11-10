@@ -545,7 +545,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="uploadForm" action="{% url 'upload_xml' %}" method="post" enctype="multipart/form-data">
+                <form id="uploadForm">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="xmlFile" class="form-label">Seleccionar archivo XML</label>
@@ -553,7 +553,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-custom-primary" id="uploadBtn">Generar Contrato</button>
+                        <button type="button" class="btn btn-custom-primary" id="uploadBtn" onclick="handleXmlUpload(event)">Generar Contrato</button>
                     </div>
                 </form>
             </div>
@@ -794,28 +794,25 @@ function handleXmlUpload(event) {
         // Add new invoice to list
         addNavItem(facturaId, parseFloat(monto).toLocaleString());
         
-        // Add delay before downloading
-        setTimeout(() => {
-            // Download NUEVOCONTRATO.rtf
-            const link = document.createElement('a');
-            link.href = '{% static "NUEVOCONTRATO.rtf" %}';
-            link.download = 'NUEVOCONTRATO.rtf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Update counter
-            updateActiveInvoicesCount();
-            
-            // Close modal and reset form
-            const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
-            modal.hide();
-            
-            // Reset button state and form
-            uploadBtn.disabled = false;
-            uploadBtn.innerHTML = 'Generar Contrato';
-            document.getElementById('uploadForm').reset();
-        }, 1500);
+        // Download NUEVOCONTRATO.rtf
+        const link = document.createElement('a');
+        link.href = '{% static "NUEVOCONTRATO.rtf" %}';
+        link.download = 'NUEVOCONTRATO.rtf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Update counter
+        updateActiveInvoicesCount();
+        
+        // Close modal and reset form
+        const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+        modal.hide();
+        
+        // Reset button state and form
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = 'Generar Contrato';
+        document.getElementById('uploadForm').reset();
     }
 }
 </script>
