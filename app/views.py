@@ -5,14 +5,10 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 import xml.etree.ElementTree as ET
 import os
-import aspose.words as aw
-from .interest.contract import create_rtf_file  # Keep this import
+from .interest.contract import create_rtf_file
 from decimal import Decimal
 from django.utils import timezone
 from .models import Cedente, Factor, Pool, Facturas
-import xml.etree.ElementTree as ET
-import os
-from .interest.contract import create_rtf_file
 
 def home(request):
     return render(request, 'home.html')
@@ -79,19 +75,18 @@ def upload_xml(request):
         try:
             xml_file = request.FILES['xmlFile']
             
-            if not os.path.exists('temp'):
-                os.makedirs('temp')
+            # Store the binary content of the XML file
+            xml_content = xml_file.read()  # This reads the file as binary
             
-            file_path = os.path.join('temp', xml_file.name)
-            with open(file_path, 'wb+') as destination:
-                for chunk in xml_file.chunks():
-                    destination.write(chunk)
+            # Create a new file-like object for parsing
+            from io import BytesIO
+            xml_for_parsing = BytesIO(xml_content)
             
-            # Use the local parse_invoice and calculate_interest functions
-            invoice_data = parse_invoice(file_path)
+            # Parse XML using the file-like object
+            invoice_data = parse_invoice(xml_for_parsing)
             interest_rate = calculate_interest(invoice_data)
             
-            # Generate contract using the imported create_rtf_file
+            # Generate contract
             contract_path = "NUEVOCONTRATO.rtf"
             create_rtf_file(
                 invoice_data['cedente'],
@@ -101,47 +96,50 @@ def upload_xml(request):
                 interest_rate
             )
             
-            # Retrieve or create Cedente
+            # Get or create Cedente
             cedente_obj, _ = Cedente.objects.get_or_create(
                 cedente=invoice_data['cedente'],
                 defaults={'rfc': invoice_data['rfcCedente']}
             )
             
-            # Ensure you have a Factor object to reference
-            factor_obj, _ = Factor.objects.get_or_create(
-                factor='Default Factor',
-                defaults={'rfc': 'RFC123456789', 'domicilio': 'Default Address'}
-            )
+            # Get or create Factor
+            factor_obj = Factor.objects.first()
+            if not factor_obj:
+                factor_obj = Factor.objects.create(
+                    factor='Default Factor',
+                    rfc='DEFAULT000000'
+                )
             
-            # Retrieve or create Pool with required fields
-            pool_obj, _ = Pool.objects.get_or_create(
+            # Create Pool
+            pool_obj = Pool.objects.create(
                 deudor=invoice_data['deudor'],
-                defaults={
-                    'tamaño': invoice_data['total'],
-                    'puja_actual': Decimal('0.0'),  # Provide initial value
-                    'ID_factor': factor_obj         # Provide a Factor instance
-                }
+                tamaño=Decimal(invoice_data['total']).quantize(Decimal('0.01')),
+                puja_actual=Decimal('0.0000000000'),
+                ID_factor=factor_obj
             )
             
-            # Create Facturas instance and save
-            factura = Facturas(
-                ID_cedente=cedente_obj,
-                ID_pool=pool_obj,
-                xml=xml_file,
-                monto=Decimal(invoice_data['total']),  # Convert to Decimal if necessary
-                plazo=int(invoice_data['plazo']),      # Convert to int if necessary
-                interes_firmado=Decimal(interest_rate),
-                contrato=open(contract_path, 'rb').read()
-            )
-            factura.save()
+            # Create Facturas with the XML blob
+            with open(contract_path, 'rb') as contract_file:
+                contract_content = contract_file.read()
+                
+                factura = Facturas(
+                    ID_cedente=cedente_obj,
+                    ID_pool=pool_obj,
+                    domicilio_deudor=invoice_data.get('domicilioFiscalReceptor'),
+                    deudor=invoice_data['deudor'],
+                    xml=xml_content,  # Use the binary content directly
+                    monto=Decimal(invoice_data['total']).quantize(Decimal('0.00001')),
+                    plazo=int(invoice_data['plazo']),
+                    interes_firmado=Decimal(str(interest_rate)).quantize(Decimal('0.0000000000')),
+                    contrato=contract_content
+                )
+                factura.save()
             
             # Prepare response
-            with open(contract_path, 'rb') as f:
-                response = HttpResponse(f.read(), content_type='application/rtf')
-                response['Content-Disposition'] = 'attachment; filename="contrato.rtf"'
+            response = HttpResponse(contract_content, content_type='application/rtf')
+            response['Content-Disposition'] = 'attachment; filename="contrato.rtf"'
             
             # Cleanup
-            os.remove(file_path)
             os.remove(contract_path)
             
             return response
@@ -151,3 +149,9 @@ def upload_xml(request):
             return redirect('dashboard')
     
     return redirect('dashboard')
+
+def download_contract(request, filename):
+    # This function is no longer needed since we're handling the download in JavaScript
+    pass
+
+
