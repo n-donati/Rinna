@@ -545,7 +545,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="uploadForm" action="{% url 'upload_xml' %}" method="post" enctype="multipart/form-data">
+                <form id="uploadForm">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="xmlFile" class="form-label">Seleccionar archivo XML</label>
@@ -553,7 +553,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-custom-primary" id="uploadBtn">Generar Contrato</button>
+                        <button type="button" class="btn btn-custom-primary" id="uploadBtn" onclick="handleXmlUpload(event)">Generar Contrato</button>
                     </div>
                 </form>
             </div>
@@ -752,7 +752,7 @@ function simulateUploadContract() {
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="contractFile" class="form-label">Seleccionar archivo de contrato</label>
-                        <input type="file" class="form-control" id="contractFile" name="contractFile" accept=".pdf,.doc,.docx,.rtf" required>
+                        <input type="file" class="form-control" id="contractFile" name="contractFile" accept=".pdf,.doc,.docx" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
