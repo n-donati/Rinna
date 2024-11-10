@@ -3,9 +3,9 @@
     xmlns:cfdi="http://www.sat.gob.mx/cfd/4"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <cfdi:Emisor Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="603" />
-    <cfdi:Receptor Rfc="URE180429TM6" Nombre="UNIVERSIDAD ROBOTICA ESPAÑOLA" DomicilioFiscalReceptor="86991" RegimenFiscalReceptor="601" UsoCFDI="CP01" />
+    <cfdi:Receptor Rfc="URE180429TM6" Nombre="Costco" DomicilioFiscalReceptor="86991" RegimenFiscalReceptor="601" UsoCFDI="CP01" />
     <cfdi:Conceptos>
-        <cfdi:Concepto ClaveProdServ="50211503" NoIdentificacion="None" Cantidad="1.0" ClaveUnidad="H87" Unidad="Pieza" Descripcion="Cigarros" ValorUnitario="10.00" Importe="10.00" Descuento="0.00" ObjetoImp="01" />
+        <cfdi:Concepto ClaveProdServ="50211503" NoIdentificacion="None" Cantidad="1.0" ClaveUnidad="H87" Unidad="Pieza" Descripcion="Tienda de retail" ValorUnitario="10.00" Importe="10.00" Descuento="0.00" ObjetoImp="01" />
     </cfdi:Conceptos>
     <cfdi:Complemento>
         <tfd:TimbreFiscalDigital xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="d3db1e48-4d81-41dd-834a-f43e926626f4" FechaTimbrado="2024-04-29T11:15:58" RfcProvCertif="SPR190613I52" SelloCFD="mCvBiMAejE88ZAaOq01cdiZv+mD6lCG04keed7Gr2RJzJPdZvKJ4vQmKo7b1pHkQVJ4vSlEk/4kqp4kYfAApmVR8A4r1Oaz8MehtOni7fAKJVE1tyf02SN9Jqb/sh8UzKV491pSIKp1Dc3G1hQ3KeLxcHXy7e6Dh7GB9MJqWtZp149lG9C2FzqQrRw1kXDoCIX3WgyBu8D7ycs4JsMSmyz7d0apvOEekFbD9oM0QDyBklwFmTcYkLXMWVBNSCHXs7z/HxqhBYfxyWg+5lpVKFRPlAg3cP85Bw8y0Cv4MfJO+EKA9+iwMyowlJTkQnNDuba/BsvRT7tGoOgmeN/X5Ww==" NoCertificadoSAT="30001000000500003456" SelloSAT="cIkI880UREczt2NMAbDiUCslhJAWUvLUjJDOvSzD1Yr//igqnz9fKzM/RptByQpdxfXhS8nxeIJITCrfPalbtr2sqMfj9DhGGNwtlu2qkY0RBFxrOdjMA5uWWpwB5H5gLWjv8TOfIZxF+xknRq3qSdrpCnKFhK1SFScWIkjxcIJYIU64A8wToqZresLnh8yU0e23qUQ+/9kP/4PF5FeYB1Qf6NqBT6Yh32koDRLYXDKJmsHGYhakSWOm0WDFQ+TfnV5/Fmn34+dC/uZfmMYhR29Uc4WVhu35baQvtLRkDN9Z5GX7KoCSoq4cHDaLWbDCt8EYWUrdBPFKdQHAVcNJeA=="
