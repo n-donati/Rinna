@@ -46,7 +46,7 @@ def seed_database():
         )
 
         # Create some sample Facturas
-        for i in range(5):  # Create 5 sample facturas
+        for i in range(20):  # Create 5 sample facturas
             factura = Facturas.objects.create(
                 ID_cedente=cedente,
                 deudor="Costco",
@@ -95,7 +95,7 @@ def pool(request):
     # Using aggregate to sum up the 'monto' field of filtered facturas
     poolSize = facturas.aggregate(total_monto=Sum('monto'))['total_monto']
 
-    print("poolsize", poolSize)
+    print("poolsize", poolSize) 
     
     # fibonacci calculation
     assigned_pools = assign_pools(poolSize, facturas)
@@ -152,7 +152,7 @@ def pool(request):
         bids.append({
             'id': id,
             'percentage': round(pool_instance.puja_actual, 4),
-            'last_puja_time': pool_instance.fecha_puja_actual,
+            'last_puja_time': pool_instance.fecha_puja_actual.strftime('%Y-%m-%d %H:%M:%S.%f'),
             'factor': factores[id - 1]
         })
 
