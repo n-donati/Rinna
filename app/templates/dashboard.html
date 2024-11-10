@@ -748,15 +748,15 @@ function simulateUploadContract() {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="uploadContractForm" onsubmit="return handleContractUpload(event)">
+                <form id="uploadContractForm">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="contractFile" class="form-label">Seleccionar archivo de contrato</label>
-                        <input type="file" class="form-control" id="contractFile" name="contractFile" accept=".rtf" required>
+                        <input type="file" class="form-control" id="contractFile" name="contractFile" accept=".pdf,.doc,.docx" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-custom-primary" id="uploadContractBtn">Subir Contrato</button>
+                        <button type="button" class="btn btn-custom-primary" onclick="handleContractUpload()">Subir Contrato</button>
                     </div>
                 </form>
             </div>
@@ -764,22 +764,15 @@ function simulateUploadContract() {
     </div>
 </div>
 
-<!-- Simple form submit handler for contract upload -->
 <script>
-document.getElementById('uploadContractForm').onsubmit = function() {
-    document.getElementById('uploadContractBtn').disabled = true;
-    document.getElementById('uploadContractBtn').innerHTML = 'Subiendo Contrato...';
+function handleContractUpload() {
+    // Simply close the modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadContractModal'));
+    modal.hide();
     
-    // Close modal after a short delay
-    setTimeout(function() {
-        $('#uploadContractModal').modal('hide');
-        document.getElementById('uploadContractBtn').disabled = false;
-        document.getElementById('uploadContractBtn').innerHTML = 'Subir Contrato';
-        document.getElementById('uploadContractForm').reset();
-    }, 1000);
-    
-    return true;
-};
+    // Reset the form
+    document.getElementById('uploadContractForm').reset();
+}
 </script>
 <script>
 function handleXmlUpload(event) {
@@ -826,4 +819,4 @@ function handleXmlUpload(event) {
 
 </body>
 
-</html> 
+</html>
