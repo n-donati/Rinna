@@ -518,7 +518,7 @@ dialog {
   <div class="tw-flex tw-flex-col tw-gap-4">
     <div class="tw-flex tw-justify-between tw-items-center">
       <h3 class="tw-text-lg tw-font-bold dark:tw-text-moon-50">Detalles de Pago</h3>
-        <button onclick="closeDialog()" class="tw-text-red-500 hover:tw-text-red-700 dark:tw-text-moon-200 tw-text-2xl tw-p-2">
+      <button onclick="closeDialog()" class="tw-text-red-500 hover:tw-text-red-700 dark:tw-text-moon-200 tw-text-2xl tw-p-2">
         <i class="fas fa-times"></i>
       </button>
     </div>
@@ -529,18 +529,127 @@ dialog {
     <button onclick="handlePayment()" class="tw-bg-primary-500 tw-text-white tw-py-2 tw-px-4 tw-rounded-lg hover:tw-bg-primary-600 tw-transition-colors">
       Proceder al Pago
     </button>
-    
-    <script>
-      function handlePayment() {
-        <!-- ...existing code... -->
-        const paymentStatusSpan = document.querySelector('.tw-text-xs.tw-font-medium.tw-text-blue-600.dark\\:tw-text-blue-400');
-        if (paymentStatusSpan) {
-          paymentStatusSpan.textContent = 'PAGADO';
-        }
-      }
-    </script>
   </div>
 </dialog>
+
+<dialog id="paymentDialog" class="tw-fixed tw-top-1/2 tw-left-1/2 tw-transform -tw-translate-x-1/2 -tw-translate-y-1/2 tw-bg-white dark:tw-bg-moon-900 tw-rounded-xl tw-shadow-xl tw-p-6 tw-min-w-[300px]">
+  <div class="tw-flex tw-flex-col tw-gap-4">
+    <div class="tw-flex tw-justify-between tw-items-center">
+      <h3 class="tw-text-lg tw-font-bold dark:tw-text-moon-50">Pago Seguro</h3>
+      <button onclick="closePaymentDialog()" class="tw-text-red-500 hover:tw-text-red-700 dark:tw-text-moon-200 tw-text-2xl tw-p-2">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="tw-border-t dark:tw-border-moon-700"></div>
+    <div class="tw-space-y-4">
+      <div class="tw-flex tw-flex-col tw-gap-2">
+        <label class="tw-text-gray-700 dark:tw-text-moon-200">Método de Pago</label>
+        <select class="tw-p-2 tw-border tw-rounded-lg dark:tw-bg-moon-800 dark:tw-border-moon-700">
+          <option>Tarjeta de Crédito</option>
+          <option>Transferencia Bancaria</option>
+          <option>PayPal</option>
+        </select>
+      </div>
+      <div class="tw-flex tw-flex-col tw-gap-2">
+        <label class="tw-text-gray-700 dark:tw-text-moon-200">Monto Total</label>
+        <input type="text" value="$2,101,038 MXN" readonly class="tw-p-2 tw-border tw-rounded-lg dark:tw-bg-moon-800 dark:tw-border-moon-700" />
+      </div>
+      <button onclick="confirmPayment()" class="tw-w-full tw-bg-green-500 tw-text-white tw-py-2 tw-px-4 tw-rounded-lg hover:tw-bg-green-600 tw-transition-colors">
+        Confirmar Pago
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="documentsDialog" class="tw-fixed tw-top-1/2 tw-left-1/2 tw-transform -tw-translate-x-1/2 -tw-translate-y-1/2 tw-bg-white dark:tw-bg-moon-900 tw-rounded-xl tw-shadow-xl tw-p-6 tw-min-w-[300px]">
+  <div class="tw-flex tw-flex-col tw-gap-4">
+    <div class="tw-flex tw-justify-between tw-items-center">
+      <h3 class="tw-text-lg tw-font-bold dark:tw-text-moon-50">Documentos</h3>
+      <button onclick="closeDocumentsDialog()" class="tw-text-red-500 hover:tw-text-red-700 dark:tw-text-moon-200 tw-text-2xl tw-p-2">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="tw-border-t dark:tw-border-moon-700"></div>
+    <div class="tw-space-y-4">
+      <div class="tw-flex tw-items-center tw-justify-between tw-p-3 tw-bg-gray-50 dark:tw-bg-moon-800 tw-rounded-lg">
+        <span class="tw-flex tw-items-center">
+          <i class="far fa-file-pdf tw-text-red-500 tw-mr-2"></i>
+          <a href="static/NUEVOCONTRATO.rtf" download="Contrato.pdf" class="tw-text-primary-500 hover:tw-text-primary-600 dark:tw-text-moon-50">
+            Contrato.pdf
+          </a>
+        </span>
+        <button onclick="downloadDocument('contrato.pdf')" class="tw-text-primary-500 hover:tw-text-primary-600">
+          <i class="fas fa-download"></i>
+        </button>
+      </div>
+      <div class="tw-flex tw-items-center tw-justify-between tw-p-3 tw-bg-gray-50 dark:tw-bg-moon-800 tw-rounded-lg">
+        <span class="tw-flex tw-items-center">
+          <i class="far fa-file-pdf tw-text-red-500 tw-mr-2"></i>
+          <a href="static/NUEVOCONTRATO.rtf" download="Contrato.pdf" class="tw-text-primary-500 hover:tw-text-primary-600 dark:tw-text-moon-50">
+            Factura.pdf
+          </a>
+        </span>
+        <button onclick="downloadDocument('factura.pdf')" class="tw-text-primary-500 hover:tw-text-primary-600">
+          <i class="fas fa-download"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  function openDialog() {
+    const dialog = document.getElementById('receiptDialog');
+    if (dialog) {
+      dialog.showModal();
+    }
+  }
+
+  function closeDialog() {
+    const dialog = document.getElementById('receiptDialog');
+    if (dialog) {
+      dialog.close();
+    }
+  }
+
+  function handlePayment() {
+    const receiptDialog = document.getElementById('receiptDialog');
+    const paymentDialog = document.getElementById('paymentDialog');
+    
+    receiptDialog.close();
+    paymentDialog.showModal();
+  }
+
+  function closePaymentDialog() {
+    const dialog = document.getElementById('paymentDialog');
+    dialog.close();
+  }
+
+  function confirmPayment() {
+    const paymentDialog = document.getElementById('paymentDialog');
+    const documentsDialog = document.getElementById('documentsDialog');
+    
+    paymentDialog.close();
+    documentsDialog.showModal();
+  }
+
+  function closeDocumentsDialog() {
+    const dialog = document.getElementById('documentsDialog');
+    dialog.close();
+  }
+
+  function downloadDocument(filename) {
+    console.log(`Downloading ${filename}...`);
+    // Add your download logic here
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const paymentButton = document.querySelector('.tw-bg-primary-500');
+    if (paymentButton) {
+      paymentButton.addEventListener('click', openDialog);
+    }
+  });
+</script>
 
 <div class="tw-relative tw-flex container tw-justify-center tw-items-center tw-mt-2 tw-h-50px md:tw-h-100px" data-ads-target="banner">
   <div class="tw-absolute tw-bottom-4 tw-left-4 tw-z-50 tw-flex tw-gap-4">
@@ -4075,9 +4184,24 @@ function closeDialog() {
 }
 
 function handlePayment() {
-  alert('Procesando pago...');
-  closeDialog();
-}
+        const receiptDialog = document.getElementById('receiptDialog');
+        const documentsDialog = document.getElementById('documentsDialog');
+        
+        receiptDialog.close();
+        documentsDialog.showModal();
+      }
+      
+      function closeDocumentsDialog() {
+        const dialog = document.getElementById('documentsDialog');
+        dialog.close();
+      }
+      
+      function downloadDocument(filename) {
+        // Simulate document download
+        console.log(`Downloading ${filename}...`);
+        alert(`Descargando ${filename}...`);
+      }
+
 </script>
 </body>
 </html>
