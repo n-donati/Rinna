@@ -51,13 +51,14 @@ def seed_database():
                 ID_cedente=cedente,
                 deudor="Costco",
                 domicilio_deudor="Sample Address",
-                monto=Decimal(random.uniform(5000, 1000)),
+                monto=Decimal(random.uniform(5000, 10000)),
                 plazo=30,
                 interes_firmado=Decimal('4.0')
             )
 
 def pool(request):
     deudor = "Costco"
+    factor = "BBVA"
     
     # Check if database is empty and seed if necessary
     if not Facturas.objects.exists():
@@ -66,25 +67,24 @@ def pool(request):
     if request.method == "POST":
         # find factor
         bid_value = request.POST.get('bid')
-        factor_id = request.POST.get('factor_id')
-        pool_id = request.POST.get('pool_id')
+        pool_id = 1
         
-        if bid_value and factor_id and pool_id:
+        if float(bid_value) < float(Pool.objects.get(id=pool_id).puja_actual):
             try:
-                factor = Factor.objects.get(id=factor_id)
                 pool = Pool.objects.get(id=pool_id)
                 
                 # Create new bid
                 Puja.objects.create(
                     ID_pool=pool,
-                    ID_factor=factor,
+                    ID_factor=Factor.objects.first(),
                     estado_puja=True
                 )
                 
                 # Update pool's current bid
-                pool.puja_actual = Decimal(bid_value)
-                pool.fecha_puja_actual = timezone.now()
+                pool.puja_actual = pool.puja_actual -  Decimal(bid_value)
+                pool.fecha_puja_actual = datetime.now()
                 pool.save()
+                factor = "Bancomer"
             except (Factor.DoesNotExist, Pool.DoesNotExist):
                 pass
     
@@ -94,33 +94,10 @@ def pool(request):
     # Using aggregate to sum up the 'monto' field of filtered facturas
     poolSize = facturas.aggregate(total_monto=Sum('monto'))['total_monto']
 
-    if not poolSize:
-        # Handle empty database case
-        return render(request, 'pool.html', {
-            'poolSize': 0,
-            'subdivision1': 0,
-            'subdivision2': 0,
-            'subdivision3': 0,
-            'subdivision4': 0,
-            'percentage1': 0,
-            'percentage2': 0,
-            'percentage3': 0,
-            'percentage4': 0,
-        })
-
     print("poolsize", poolSize)
     
     # fibonacci calculation
     assigned_pools = assign_pools(poolSize, facturas)
-    
-    # poolSize = 100
-    # historial de pujas 
-    calculatedInterest = "4%"
-    firstLastInterest = "5%"
-    secondLastInterest = "6%"
-    thirdLastInterest = "7%"
-    fourthLastInterest = "8%"
-    fifthLastInterest = "9%"
     
     # calculo de subdivision de la pool
     subdivision1 = round(assigned_pools['pool1']['current_total'], 2)
@@ -130,12 +107,6 @@ def pool(request):
     
     print(subdivision1+subdivision2+subdivision3+subdivision4)
     
-    # porcentage de PUJA 
-    percentage1 = round(subdivision1 / poolSize * 100, 2)
-    percentage2 = round(subdivision2 / poolSize * 100, 2)
-    percentage3 = round(subdivision3 / poolSize * 100, 2)  
-    percentage4 = round(subdivision4 / poolSize * 100, 2)
-    
     # Get puja_actual safely
     try:
         puja_actual = Facturas.objects.first().interes_firmado
@@ -143,24 +114,22 @@ def pool(request):
         puja_actual = Decimal('0.0000000000')
 
     # Create a pool for each subdivision in assigned_pools
-    pool_instances = {}
-    for pool_name in ['pool1', 'pool2', 'pool3', 'pool4']:
-        try:
-            pool_instance, created = Pool.objects.get_or_create(
-                deudor=deudor,
-                tamaño=assigned_pools[pool_name]['current_total'],
-                fecha_registro=datetime.now(),
-                puja_actual=puja_actual,
-                fecha_puja_actual=datetime.now()
-            )
-            pool_instance.save()
-            pool_instances[pool_name] = pool_instance
-        except Exception as e:
-            print(f"Error creating pool {pool_name}: {str(e)}")
-            continue
-
-    # Assign facturas only if we have valid pools
-    if pool_instances:
+    if not Pool.objects.filter(deudor=deudor).exists():
+        pool_instances = {}
+        for pool_name in ['pool1', 'pool2', 'pool3', 'pool4']:
+            try:
+                pool_instance, created = Pool.objects.get_or_create(
+                    deudor=deudor,
+                    tamaño=assigned_pools[pool_name]['current_total'],
+                    fecha_registro=datetime.now(),
+                    puja_actual=puja_actual,
+                    fecha_puja_actual=datetime.now()
+                )
+                pool_instance.save()
+                pool_instances[pool_name] = pool_instance
+            except Exception as e:
+                print(f"Error creating pool {pool_name}: {str(e)}")
+                continue
         for pool_name, pool in assigned_pools.items():
             if pool_name in pool_instances:
                 for factura_id in pool['facturas']:
@@ -170,6 +139,12 @@ def pool(request):
                         factura.save()
                     except Facturas.DoesNotExist:
                         continue
+    
+    # porcentage de PUJA 
+    percentage1 = round(Pool.objects.get(id=1).puja_actual, 4)
+    percentage2 = round(Pool.objects.get(id=2).puja_actual, 4)
+    percentage3 = round(Pool.objects.get(id=3).puja_actual, 4) 
+    percentage4 = round(Pool.objects.get(id=4).puja_actual, 4)
 
     return render(request, 'pool.html', {
         'poolSize': round(poolSize, 2),
@@ -181,7 +156,9 @@ def pool(request):
         'percentage2': percentage2,
         'percentage3': percentage3,
         'percentage4': percentage4,
-        # 'facturas': facturas
+        'factor': factor,
+        'volumenFacturas': len(facturas),
+        'horaPuja1': Pool.objects.get(id=1).fecha_puja_actual,
     })
 
 def assign_pools(poolSize, facturas):
