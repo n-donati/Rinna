@@ -566,7 +566,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-custom-primary" id="uploadBtn">Subir</button>
+                        <button type="submit" class="btn btn-custom-primary">Subir</button>
                     </div>
                 </form>
             </div>
@@ -574,13 +574,50 @@
     </div>
 </div>
 
-<!-- Add upload progress JavaScript -->
 <script>
-    document.getElementById('uploadForm').onsubmit = function() {
-        document.getElementById('uploadBtn').disabled = true;
-        document.getElementById('uploadBtn').innerHTML = 'Subiendo...';
-        return true;
-    };
+document.getElementById('uploadForm').onsubmit = function(e) {
+    e.preventDefault();
+    const form = this;
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'
+    }).then(response => {
+        // Close the modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+        modal.hide();
+        
+        // Show success message
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            Factura procesada exitosamente
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.querySelector('.messages').appendChild(alertDiv);
+
+        // Handle file download
+        return response.blob();
+    }).then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'contract.rtf';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+
+    // Reset form
+    form.reset();
+    return false;
+};
 </script>
 
 </body>
