@@ -472,7 +472,7 @@
 						width: '400px',
 						height: '400px',
 						display: 'grid',
-						gridTemplateColumns: `repeat(${size}, 1fr)`,
+						gridTemplateColumns: repeat(${size}, 1fr),
 						gap: '1px',
 						borderRadius: '8px',
 						overflow: 'hidden',
@@ -492,12 +492,12 @@
 							}
 
 							// Calculate color based on max intensity
-							const color = `rgba(255, 0, 0, ${maxIntensity * 0.7})`;
+							const color = rgba(255, 0, 0, ${maxIntensity * 0.7});
 
 							// Base cream color
 							const baseCream = 245;
 							const creamVariation = Math.floor(Math.random() * 10);
-							const creamColor = `rgb(${baseCream - creamVariation}, ${baseCream - creamVariation - 10}, ${baseCream - creamVariation - 20})`;
+							const creamColor = rgb(${baseCream - creamVariation}, ${baseCream - creamVariation - 10}, ${baseCream - creamVariation - 20});
 
 							// Apply styles to cell
 							Object.assign(cell.style, {
@@ -625,7 +625,7 @@ function addNavItem(facturaId, monto) {
     const textSpan = document.createElement('span');
     textSpan.classList.add('nav-link-text');
     textSpan.dataset.invoiceId = facturaId;
-    textSpan.textContent = `$${monto} -- ${facturaId}`;
+    textSpan.textContent = $${monto} -- ${facturaId};
 
     // Assemble the elements
     navLink.appendChild(iconSpan);
@@ -752,7 +752,7 @@ function simulateUploadContract() {
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="contractFile" class="form-label">Seleccionar archivo de contrato</label>
-                        <input type="file" class="form-control" id="contractFile" name="contractFile" accept=".pdf,.doc,.docx" required>
+                        <input type="file" class="form-control" id="contractFile" name="contractFile" accept=".pdf,.doc,.docx,.rtf" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -782,37 +782,47 @@ function handleXmlUpload(event) {
     const file = fileInput.files[0];
     
     if (file) {
-        // Disable button and show loading state
+        // Disable button and show initial loading state
         const uploadBtn = document.getElementById('uploadBtn');
         uploadBtn.disabled = true;
-        uploadBtn.innerHTML = 'Generando Contrato...';
+        uploadBtn.innerHTML = 'Analizando XML...';
         
-        // Generate random values for new nav item
-        const facturaId = Math.random().toString(36).substr(2, 9);
-        const monto = Math.floor(Math.random() * 900000 + 100000).toString();
-        
-        // Add new invoice to list
-        addNavItem(facturaId, parseFloat(monto).toLocaleString());
-        
-        // Download NUEVOCONTRATO.rtf
-        const link = document.createElement('a');
-        link.href = '{% static "NUEVOCONTRATO.rtf" %}';
-        link.download = 'NUEVOCONTRATO.rtf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Update counter
-        updateActiveInvoicesCount();
-        
-        // Close modal and reset form
-        const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
-        modal.hide();
-        
-        // Reset button state and form
-        uploadBtn.disabled = false;
-        uploadBtn.innerHTML = 'Generar Contrato';
-        document.getElementById('uploadForm').reset();
+        setTimeout(() => {
+            uploadBtn.innerHTML = 'Procesando Documento...';
+            
+            setTimeout(() => {
+                uploadBtn.innerHTML = 'Generando Contrato...';
+                
+                setTimeout(() => {
+                    // Generate random values for new nav item
+                    const facturaId = Math.random().toString(36).substr(2, 9);
+                    const monto = Math.floor(Math.random() * 900000 + 100000).toString();
+                    
+                    // Add new invoice to list
+                    addNavItem(facturaId, parseFloat(monto).toLocaleString());
+                    
+                    // Download NUEVOCONTRATO.rtf
+                    const link = document.createElement('a');
+                    link.href = '{% static "NUEVOCONTRATO.rtf" %}';
+                    link.download = 'NUEVOCONTRATO.rtf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Update counter
+                    updateActiveInvoicesCount();
+                    
+                    // Close modal and reset form
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+                    modal.hide();
+                    
+                    // Reset button state and form
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = 'Generar Contrato';
+                    document.getElementById('uploadForm').reset();
+                }, 1000); // 1.5s for final generation
+            }, 1000); // 2s for processing
+        }, 1500); // 1.5s for initial analysis
     }
 }
 </script>
