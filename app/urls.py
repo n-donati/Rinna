@@ -10,4 +10,5 @@ urlpatterns = [
     path('login_c/' , views.login_c, name='login_c'),
     path('login_f/' , views.login_f, name='login_f'),
     path('pool/<str:store_name>/', views.pool, name='pool'),
+    path('upload_xml/', views.upload_xml, name='upload_xml'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
