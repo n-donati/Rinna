@@ -198,7 +198,7 @@ dialog {
             <div class="tw-flex tw-items-center tw-cursor-pointer">
               <div data-view-component="true"
                 class="nav-label dark:!tw-text-moon-50 tw-text-gray-700 dark:tw-text-moon-100 tw-font-semibold tw-text-sm tw-leading-5">
-                Tus Subastas
+                Portafolio
               </div>
             </div>
           </div>
@@ -207,36 +207,259 @@ dialog {
             <div class="tw-flex tw-items-center tw-cursor-pointer">
               <div data-view-component="true"
                 class="nav-label dark:!tw-text-moon-50 tw-text-gray-700 dark:tw-text-moon-100 tw-font-semibold tw-text-sm tw-leading-5">
-                Perfil
+                Tus Contratos
               </div>
             </div>
           </div>
-
-
-          <div class="2lg:tw-hidden tw-mt-8 tw-grid tw-grid-cols-1 tw-gap-2" data-login-state-target="loggedOutItem">
-            <button data-action="click-&gt;auth#openSignUpModal" data-analytics-origin="navbar_sign_up" type="button"
-              data-view-component="true"
-              class="tw-bg-primary-500 dark:tw-bg-primary-400 tw-shadow-primaryShadow !tw-mb-1 hover:tw-bg-primary-600 dark:hover:tw-bg-primary-300 hover:tw-shadow-primaryHover active:!tw-shadow-primaryActive tw-transition-all tw-duration-150 active:tw-translate-y-2 tw-items-center tw-justify-center tw-font-semibold tw-text-inline tw-rounded-lg tw-select-none focus:tw-outline-none tw-px-4 tw-py-2 tw-flex tw-w-full">
-
-              <div data-view-component="true"
-                class="tw-text-white hover:tw-text-white focus:tw-text-white dark:tw-text-primary-900 dark:hover:tw-text-primary-900 dark:focus:tw-text-primary-900 tw-font-semibold tw-text-sm tw-leading-5">
-
-                Create an account
-
-              </div>
+          <div class="tw-flex tw-flex-col 2lg:tw-flex-row 2lg:tw-flex-1 tw-justify-end">
+            <div data-view-component="true" class="2lg:tw-hidden tw-flex tw-gap-x-2 tw-items-center tw-text-gray-500 dark:tw-text-moon-200 tw-text-sm">
+               <div class="tw-w-full tw-border-t tw-border-gray-200 dark:tw-border-moon-700"></div>
+            </div>
+         </div>
+         <div class="tw-flex tw-flex-col 2lg:tw-relative 2lg:tw-ml-4" data-action="click->navbar#handleClick" data-login-state-target="portfolioItem">
+            <div class="tw-flex tw-items-center 2lg:tw-cursor-pointer tw-no-underline">
+               <i data-view-component="true" class="fas fa-fw fa-star tw-mr-2 2lg:tw-mr-0.5 tw-text-yellow-500"></i>
+               <a class="nav-label tw-no-underline tw-hidden 2lg:tw-block" href="">
+                  <div data-view-component="true" class="dark:!tw-text-moon-50 tw-text-gray-700 dark:tw-text-moon-100 tw-font-semibold tw-text-sm tw-leading-5">
+                     Perfil
+                  </div>
+               </a>
+               <div data-view-component="true" class="nav-label dark:!tw-text-moon-50 tw-block 2lg:tw-hidden tw-text-gray-700 dark:tw-text-moon-100 tw-font-semibold tw-text-sm tw-leading-5">
+                  Mi Perfil
+               </div>
+               <i data-view-component="true" class="far nav-items-toggle fa-plus tw-text-lg tw-p-2 2lg:!tw-hidden tw-text-gray-700 dark:tw-text-moon-50"></i>
+            </div>
+            <div data-view-component="true" class="2lg:tw-hidden tw-flex tw-gap-x-2 tw-items-center tw-text-gray-500 dark:tw-text-moon-200 tw-text-sm">
+               <div class="tw-w-full tw-border-t tw-border-gray-200 dark:tw-border-moon-700"></div>
+            </div>
+            <div data-view-component="true" class="tw-inline-block tw-text-left">
+               <div class="tw-z-[2000]">
+                  <div x-transition:enter="tw-transition tw-ease-out tw-duration-100" x-transition:enter-end="tw-transform tw-opacity-100 tw-scale-100" x-transition:enter-start="tw-transform tw-opacity-0 tw-scale-95" x-transition:leave="tw-transition tw-ease-in tw-duration-75" x-transition:leave-end="tw-transform tw-opacity-0 tw-scale-95" x-transition:leave-start="tw-transform tw-opacity-100 tw-scale-100" data-login-state-target="portfolioMenu" data-view-component="true" class="nav-items 2lg:tw-hidden 2lg:!tw-left-[unset] 2lg:!tw-right-0 2lg:tw-max-h-[28rem] 2lg:tw-overflow-y-auto dark:tw-bg-moon-800 dark:tw-ring-moon-700 focus:tw-outline-none tw-bg-white tw-mt-2 tw-origin-top-left tw-ring-2 tw-ring-gray-200 tw-rounded-md tw-shadow-lg tw-w-56 tw-p-2 tw-z-[2000]">
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="tw-flex tw-flex-col" data-action="click->navbar#handleClick" data-login-state-target="loggedInItem">
+            <div class=" 2lg:tw-hidden tw-flex tw-items-center tw-cursor-pointer">
+               <i data-view-component="true" class="fas fa-user-circle fa-fw tw-mr-2 tw-text-gray-900 dark:tw-text-moon-200"></i>
+               <div data-view-component="true" class="nav-label dark:!tw-text-moon-50 tw-text-gray-700 dark:tw-text-moon-100 tw-font-semibold tw-text-sm tw-leading-5">
+                  My Account
+               </div>
+               <i data-view-component="true" class="far nav-items-toggle fa-plus tw-text-lg tw-p-2 2lg:!tw-hidden tw-text-gray-700 dark:tw-text-moon-50"></i>
+            </div>
+            <div data-view-component="true" class="2lg:tw-hidden tw-flex tw-gap-x-2 tw-items-center tw-text-gray-500 dark:tw-text-moon-200 tw-text-sm">
+               <div class="tw-w-full tw-border-t tw-border-gray-200 dark:tw-border-moon-700"></div>
+            </div>
+            <div data-view-component="true" class="tw-inline-block tw-text-left">
+               <div class="tw-z-[2000]">
+                  <div x-transition:enter="tw-transition tw-ease-out tw-duration-100" x-transition:enter-end="tw-transform tw-opacity-100 tw-scale-100" x-transition:enter-start="tw-transform tw-opacity-0 tw-scale-95" x-transition:leave="tw-transition tw-ease-in tw-duration-75" x-transition:leave-end="tw-transform tw-opacity-0 tw-scale-95" x-transition:leave-start="tw-transform tw-opacity-100 tw-scale-100" data-navbar-target="accountMenu" data-view-component="true" class="nav-items 2lg:tw-hidden 2lg:!tw-w-52 dark:tw-bg-moon-800 dark:tw-ring-moon-700 focus:tw-outline-none tw-bg-white tw-mt-2 tw-origin-top-left tw-ring-2 tw-ring-gray-200 tw-rounded-md tw-shadow-lg tw-w-56 tw-p-2 tw-z-[2000]">
+                     <div data-view-component="true">
+                        <span data-action="click-&gt;application#navigateToUrl" data-url="/account/security" data-view-component="true" class="tw-cursor-pointer dark:tw-text-moon-100 dark:hover:tw-bg-moon-700 dark:hover:tw-text-moon-50 hover:tw-bg-gray-100 hover:tw-text-gray-900 tw-flex tw-items-center tw-py-3 tw-px-2 tw-rounded-lg tw-font-semibold tw-text-gray-700 tw-text-sm">
+                        Login and Security
+                        </span>
+                        <span data-action="click-&gt;application#navigateToUrl" data-url="/en/developers/dashboard" data-login-state-target="developerItem" data-view-component="true" class="tw-cursor-pointer tw-hidden dark:tw-text-moon-100 dark:hover:tw-bg-moon-700 dark:hover:tw-text-moon-50 hover:tw-bg-gray-100 hover:tw-text-gray-900 tw-flex tw-items-center tw-py-3 tw-px-2 tw-rounded-lg tw-font-semibold tw-text-gray-700 tw-text-sm">
+                        Developer&#39;s Dashboard
+                        </span>
+                        <span data-action="click-&gt;application#navigateToUrl" data-url="/en/premium/pricing" data-login-state-target="subscribeButton" data-view-component="true" class="tw-cursor-pointer dark:tw-text-moon-100 dark:hover:tw-bg-moon-700 dark:hover:tw-text-moon-50 hover:tw-bg-gray-100 hover:tw-text-gray-900 tw-flex tw-items-center tw-py-3 tw-px-2 tw-rounded-lg tw-font-semibold tw-text-gray-700 tw-text-sm">
+                        Upgrade to Premium
+                        </span>
+                        <span data-action="click-&gt;application#navigateToUrl" data-url="/account/subscriptions" data-login-state-target="premiumItem" data-view-component="true" class="tw-cursor-pointer tw-hidden dark:tw-text-moon-100 dark:hover:tw-bg-moon-700 dark:hover:tw-text-moon-50 hover:tw-bg-gray-100 hover:tw-text-gray-900 tw-flex tw-items-center tw-py-3 tw-px-2 tw-rounded-lg tw-font-semibold tw-text-gray-700 tw-text-sm">
+                        Manage Subscription
+                        </span>
+                        <span data-action="click-&gt;application#navigateToUrl" data-url="/account/premium-newsletter?locale=en" data-login-state-target="premiumItem" data-view-component="true" class="tw-cursor-pointer tw-hidden dark:tw-text-moon-100 dark:hover:tw-bg-moon-700 dark:hover:tw-text-moon-50 hover:tw-bg-gray-100 hover:tw-text-gray-900 tw-flex tw-items-center tw-py-3 tw-px-2 tw-rounded-lg tw-font-semibold tw-text-gray-700 tw-text-sm">
+                        Premium Newsletter
+                        </span>
+                        <span data-action="click-&gt;application#navigateToUrl" data-url="/account/sign_out?locale=en" data-method="delete" data-view-component="true" class="tw-cursor-pointer dark:tw-text-moon-100 dark:hover:tw-bg-moon-700 dark:hover:tw-text-moon-50 hover:tw-bg-gray-100 hover:tw-text-gray-900 tw-flex tw-items-center tw-py-3 tw-px-2 tw-rounded-lg tw-font-semibold tw-text-gray-700 tw-text-sm">
+                        Sign Out
+                        </span>
+                        <div data-view-component="true" class="tw-mt-2 2lg:tw-hidden tw-flex tw-gap-x-2 tw-items-center tw-text-gray-500 dark:tw-text-moon-200 tw-text-sm">
+                           <div class="tw-w-full tw-border-t tw-border-gray-200 dark:tw-border-moon-700"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="2lg:tw-hidden tw-mt-8 tw-grid tw-grid-cols-1 tw-gap-2" data-login-state-target="loggedOutItem">
+            <button data-action="click-&gt;auth#openSignUpModal" data-analytics-origin="navbar_sign_up" type="button" data-view-component="true" class="tw-bg-primary-500 dark:tw-bg-primary-400 tw-shadow-primaryShadow !tw-mb-1 hover:tw-bg-primary-600 dark:hover:tw-bg-primary-300 hover:tw-shadow-primaryHover active:!tw-shadow-primaryActive tw-transition-all tw-duration-150 active:tw-translate-y-2 tw-items-center tw-justify-center tw-font-semibold tw-text-inline tw-rounded-lg tw-select-none focus:tw-outline-none tw-px-4 tw-py-2 tw-flex tw-w-full">
+               <div data-view-component="true" class="tw-text-white hover:tw-text-white focus:tw-text-white dark:tw-text-primary-900 dark:hover:tw-text-primary-900 dark:focus:tw-text-primary-900 tw-font-semibold tw-text-sm tw-leading-5">
+                  Create an account
+               </div>
             </button>
-            <button data-action="click-&gt;auth#openSignInModal" data-analytics-origin="navbar_login" type="button"
-              data-view-component="true"
-              class="tw-bg-white dark:tw-bg-moon-800 !tw-border-t-2 !tw-border-x-2 !tw-border-slate-300 dark:!tw-border-moon-500 tw-shadow-secondaryShadow dark:tw-shadow-secondaryShadowDark !tw-mb-1 hover:tw-bg-slate-100 dark:hover:tw-bg-moon-700 hover:tw-shadow-secondaryHover dark:hover:tw-shadow-secondaryHoverDark active:!tw-shadow-secondaryActive dark:active:!tw-shadow-secondaryActiveDark tw-transition-all tw-duration-150 active:tw-translate-y-2 tw-items-center tw-justify-center tw-font-semibold tw-text-inline tw-rounded-lg tw-select-none focus:tw-outline-none tw-px-4 tw-py-2 tw-flex tw-w-full">
-
-              <div data-view-component="true"
-                class="tw-text-slate-900 hover:tw-text-slate-900 focus:tw-text-slate-900 dark:tw-text-moon-50 dark:hover:tw-text-moon-50 dark:focus:tw-text-moon-50 tw-font-semibold tw-text-sm tw-leading-5">
-
-                Log in
-
-              </div>
+            <button data-action="click-&gt;auth#openSignInModal" data-analytics-origin="navbar_login" type="button" data-view-component="true" class="tw-bg-white dark:tw-bg-moon-800 !tw-border-t-2 !tw-border-x-2 !tw-border-slate-300 dark:!tw-border-moon-500 tw-shadow-secondaryShadow dark:tw-shadow-secondaryShadowDark !tw-mb-1 hover:tw-bg-slate-100 dark:hover:tw-bg-moon-700 hover:tw-shadow-secondaryHover dark:hover:tw-shadow-secondaryHoverDark active:!tw-shadow-secondaryActive dark:active:!tw-shadow-secondaryActiveDark tw-transition-all tw-duration-150 active:tw-translate-y-2 tw-items-center tw-justify-center tw-font-semibold tw-text-inline tw-rounded-lg tw-select-none focus:tw-outline-none tw-px-4 tw-py-2 tw-flex tw-w-full">
+               <div data-view-component="true" class="tw-text-slate-900 hover:tw-text-slate-900 focus:tw-text-slate-900 dark:tw-text-moon-50 dark:hover:tw-text-moon-50 dark:focus:tw-text-moon-50 tw-font-semibold tw-text-sm tw-leading-5">
+                  Log in
+               </div>
             </button>
+         </div>
+         <div class="2lg:tw-hidden tw-mt-8 tw-grid tw-grid-cols-3 tw-gap-x-2">
+            <button onclick="Modal.show(&#39;language_selector&#39;)" type="button" data-view-component="true" class="tw-bg-white dark:tw-bg-moon-800 !tw-border-t-2 !tw-border-x-2 !tw-border-slate-300 dark:!tw-border-moon-500 tw-shadow-secondaryShadow dark:tw-shadow-secondaryShadowDark !tw-mb-1 hover:tw-bg-slate-100 dark:hover:tw-bg-moon-700 hover:tw-shadow-secondaryHover dark:hover:tw-shadow-secondaryHoverDark active:!tw-shadow-secondaryActive dark:active:!tw-shadow-secondaryActiveDark tw-transition-all tw-duration-150 active:tw-translate-y-2 tw-items-center tw-justify-center tw-font-semibold tw-text-inline tw-rounded-lg tw-select-none focus:tw-outline-none tw-px-4 tw-py-2 tw-flex tw-w-full">
+               <div data-view-component="true" class="tw-text-slate-900 hover:tw-text-slate-900 focus:tw-text-slate-900 dark:tw-text-moon-50 dark:hover:tw-text-moon-50 dark:focus:tw-text-moon-50 tw-font-semibold tw-text-sm tw-leading-5">
+                  EN
+               </div>
+            </button>
+            <button onclick="Modal.show(&#39;currency_selector&#39;)" type="button" data-view-component="true" class="tw-bg-white dark:tw-bg-moon-800 !tw-border-t-2 !tw-border-x-2 !tw-border-slate-300 dark:!tw-border-moon-500 tw-shadow-secondaryShadow dark:tw-shadow-secondaryShadowDark !tw-mb-1 hover:tw-bg-slate-100 dark:hover:tw-bg-moon-700 hover:tw-shadow-secondaryHover dark:hover:tw-shadow-secondaryHoverDark active:!tw-shadow-secondaryActive dark:active:!tw-shadow-secondaryActiveDark tw-transition-all tw-duration-150 active:tw-translate-y-2 tw-items-center tw-justify-center tw-font-semibold tw-text-inline tw-rounded-lg tw-select-none focus:tw-outline-none tw-px-4 tw-py-2 tw-flex tw-w-full">
+               <div data-view-component="true" class="tw-text-slate-900 hover:tw-text-slate-900 focus:tw-text-slate-900 dark:tw-text-moon-50 dark:hover:tw-text-moon-50 dark:focus:tw-text-moon-50 tw-font-semibold tw-text-sm tw-leading-5">
+                  <span data-settings-target="currencyText">USD</span>
+               </div>
+            </button>
+            <button data-action="click-&gt;settings#toggleDarkMode" type="button" data-view-component="true" class="tw-bg-white dark:tw-bg-moon-800 !tw-border-t-2 !tw-border-x-2 !tw-border-slate-300 dark:!tw-border-moon-500 tw-shadow-secondaryShadow dark:tw-shadow-secondaryShadowDark !tw-mb-1 hover:tw-bg-slate-100 dark:hover:tw-bg-moon-700 hover:tw-shadow-secondaryHover dark:hover:tw-shadow-secondaryHoverDark active:!tw-shadow-secondaryActive dark:active:!tw-shadow-secondaryActiveDark tw-transition-all tw-duration-150 active:tw-translate-y-2 tw-items-center tw-justify-center tw-font-semibold tw-text-inline tw-rounded-lg tw-select-none focus:tw-outline-none tw-px-4 tw-py-2 tw-flex tw-w-full">
+               <div data-view-component="true" class="tw-text-slate-900 hover:tw-text-slate-900 focus:tw-text-slate-900 dark:tw-text-moon-50 dark:hover:tw-text-moon-50 dark:focus:tw-text-moon-50 tw-font-semibold tw-text-sm tw-leading-5">
+                  <i data-settings-target="darkModeButton" data-view-component="true" class="fas fa-fw fa-sun"></i>
+               </div>
+            </button>
+         </div>
+      </div>
+      <div data-controller="search-v2 button-ads targeting-ads"
+         class="tw-flex flex-column tw-justify-center h-100 search-container tw-relative tw-py-2 2lg:tw-py-0">
+         <div class="tw-relative tw-w-full" data-action="keydown->search-v2#onKeydown">
+            <div id="search-bar" class="tw-flex tw-items-center tw-justify-between tw-bg-gray-100 tw-p-2.5 tw-w-full 2lg:tw-w-52 tw-text-xs tw-text-inline tw-rounded-lg hover:tw-bg-gray-200 dark:tw-bg-moon-800 dark:hover:tw-bg-moon-700"
+               data-action="click->search-v2#showSearchPopup click->button-ads#sendImpression"
+               data-search-v2-target="searchbar inputOverlay"
+               data-index-trending-coins-target="searchbar">
+               <div class="tw-font-semibold tw-text-left tw-text-gray-500 dark:tw-text-moon-200">
+                  <i class="far fa-search tw-pr-1"></i>
+                  Buscar
+               </div>
+               <span class="tw-hidden lg:tw-block tw-py-0.5 tw-px-2 tw-rounded-md tw-rounder-2 tw-bg-gray-300 tw-text-gray-500 dark:tw-text-moon-200 dark:tw-bg-moon-600">
+               /
+               </span>
+            </div>
+            <div id="search-popover" class="search-results tw-w-full 2lg:tw-w-[768px] tw-max-h-[90vh] tw-right-0 tw-top-0 tw-rounded-md 2lg:tw-shadow-lg tw-hidden" data-search-v2-target="searchPopup">
+               <div class="tw-flex tw-flex-row tw-items-center tw-px-2 2lg:tw-px-4 2lg:tw-py-2 tw-py-1 tw-shadow-sm 2lg:tw-shadow-none tw-rounded-lg">
+                  <div>
+                     <i class="far !tw-text-xs tw-ml-[2px] tw-mb-[5px] lg:tw-mb-0 lg:tw-mt-[2px] fa-search"></i>
+                  </div>
+                  <div class="tw-flex-1">
+                     <input id="search-input-field" class="tw-w-full tw-border-none tw-px-2 2lg:tw-py-2 search-input-dark dark:tw-text-white !tw-text-base 2lg:!tw-text-sm"
+                        data-action="input->search-v2#onInputChanged focus->search-v2#onFocus"
+                        data-search-v2-target="input"
+                        placeholder="Search Token, Dex Pairs, NFT, Exchanges, Categories, Articles"
+                        autocomplete="off"
+                        />
+                  </div>
+                  <div class="tw-flex tw-items-center">
+                     <span data-action="click-&gt;search-v2#clearSearch" data-view-component="true" class="tw-cursor-pointer tw-mr-2 lg:tw-hidden tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-bg-gray-100 dark:tw-bg-moon-400/20 tw-rounded-md">
+                        <div data-view-component="true" class="tw-text-xs tw-leading-4 tw-text-gray-700 dark:tw-text-moon-200 tw-font-medium">
+                           Clear
+                        </div>
+                     </span>
+                     <i data-action="click->search-v2#hideSearchPopup" class="fas fa-times tw-text-xl 2lg:tw-text-base tw-p-3 tw-pr-0 2lg:tw-p-2 2lg:tw-pr-0 tw-text-gray-500 tw-text-base dark:tw-text-white dark:tw-opacity-60 tw-cursor-pointer"></i>
+                  </div>
+               </div>
+               <div data-view-component="true" class="tw-flex tw-gap-x-2 tw-items-center tw-text-gray-500 dark:tw-text-moon-200 tw-text-sm">
+                  <div class="tw-w-full tw-border-t tw-border-gray-200 dark:tw-border-moon-700"></div>
+               </div>
+                  <div class="tw-flex tw-flex-col-reverse md:tw-grid md:tw-grid-cols-5">
+                      <div class="md:tw-col-span-3 md:tw-pt-4 md:tw-px-4">
+                        <div class="md:tw-mb-3">
+                            <div data-search-v2-target="defaultChips">
+                              <div x-data="{ activeTab: &#39;trending&#39; }" data-view-component="true">
+                                  <nav class="tw-overflow-x-auto tw-flex tw-gap-x-2.5 tw-gap-y-1.5 tw-whitespace-nowrap">
+                                    <a data-search-v2-target="chipTrendingCoin" data-action="click-&gt;search-v2#scrollToList" data-scroll-target="search-coin-results" @click="activeTab = &#39;trending&#39;" :class="{ selected: activeTab === &#39;trending&#39; }" id="tab-trending" data-view-component="true" class="gecko-tab-chip-item selected">
+                                    <span data-view-component="true" class="tw-font-semibold tw-text-sm tw-leading-5">
+                                    <i class='fa-solid fa-fire tw-mr-1' data-scroll-target='search-coin-results'></i>Trending
+                                    </span></a>
+                                    <a data-search-v2-target="chipTrendingNft" data-action="click-&gt;search-v2#scrollToList" data-scroll-target="search-nft-results" @click="activeTab = &#39;trending-nft&#39;" :class="{ selected: activeTab === &#39;trending-nft&#39; }" id="tab-trending-nft" data-view-component="true" class="gecko-tab-chip-item">
+                                    <span data-view-component="true" class="tw-font-semibold tw-text-sm tw-leading-5">
+                                    <i class='fa-solid fa-image tw-mr-1' data-scroll-target='search-nft-results'></i>NFTs
+                                    </span></a>
+                                    <a data-search-v2-target="chipTrendingCategory" data-action="click-&gt;search-v2#scrollToList" data-scroll-target="search-category-results" @click="activeTab = &#39;trending-categories&#39;" :class="{ selected: activeTab === &#39;trending-categories&#39; }" id="tab-trending-categories" data-view-component="true" class="gecko-tab-chip-item">
+                                    <span data-view-component="true" class="tw-font-semibold tw-text-sm tw-leading-5">
+                                    <i class='fa-solid fa-shapes tw-mr-1' data-scroll-target='search-category-results'></i>Categories
+                                    </span></a>
+                                  </nav>
+                                  <div data-view-component="true"></div>
+                              </div>
+                            </div>
+                            <div data-search-v2-target="userChips" class="tw-hidden">
+                              <div x-data="{ activeTab: &#39;cryptocurrencies&#39; }" data-view-component="true">
+                                  <nav class="tw-overflow-x-auto tw-flex tw-gap-x-2.5 tw-gap-y-1.5 tw-whitespace-nowrap md:tw-flex-wrap md:tw-space-x-0">
+                                    <a data-search-v2-target="chipCoin" data-action="click-&gt;search-v2#scrollToList" data-scroll-target="search-coin-results" @click="activeTab = &#39;cryptocurrencies&#39;" :class="{ selected: activeTab === &#39;cryptocurrencies&#39; }" id="tab-cryptocurrencies" data-view-component="true" class="tw-hidden gecko-tab-chip-item selected">
+                                    <span data-view-component="true" class="tw-font-semibold tw-text-sm tw-leading-5">
+                                    <i class='fa-solid fa-coins tw-mr-1' data-scroll-target='search-coin-results'></i>Mercado
+                                    </span></a>
+                                    <a data-search-v2-target="chipNft" data-action="click-&gt;search-v2#scrollToList" data-scroll-target="search-nft_contract-results" @click="activeTab = &#39;nfts&#39;" :class="{ selected: activeTab === &#39;nfts&#39; }" id="tab-nfts" data-view-component="true" class="tw-hidden gecko-tab-chip-item">
+                                    <span data-view-component="true" class="tw-font-semibold tw-text-sm tw-leading-5">
+                                    <i class='fa-solid fa-image tw-mr-1' data-scroll-target='search-nft-results'></i>NFTs
+                                    </span></a>
+                                    <a data-search-v2-target="chipExchange" data-action="click-&gt;search-v2#scrollToList" data-scroll-target="search-market-results" @click="activeTab = &#39;exchanges&#39;" :class="{ selected: activeTab === &#39;exchanges&#39; }" id="tab-exchanges" data-view-component="true" class="tw-hidden gecko-tab-chip-item">
+                                    <span data-view-component="true" class="tw-font-semibold tw-text-sm tw-leading-5">
+                                    <i class='fa-solid fa-bank tw-mr-1' data-scroll-target='search-exchange-results'></i>Tus Subastas
+                                    </span></a>
+                                    <a data-search-v2-target="chipCategory" data-action="click-&gt;search-v2#scrollToList" data-scroll-target="search-category-results" @click="activeTab = &#39;categories&#39;" :class="{ selected: activeTab === &#39;categories&#39; }" id="tab-categories" data-view-component="true" class="tw-hidden gecko-tab-chip-item">
+                                    <span data-view-component="true" class="tw-font-semibold tw-text-sm tw-leading-5">
+                                    <i class='fa-solid fa-shapes tw-mr-1' data-scroll-target='search-category-results'></i>Perfil
+                                    </span></a>
+                                  </nav>
+                                  <div data-view-component="true"></div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="md:tw-col-span-2 md:tw-px-4 md:tw-border-l md:tw-border-gray-200 dark:md:tw-border-moon-700">
+                        <div class="tw-mb-5">
+                            <div id="sponsored-search-desktop"
+                              class="tw-pt-4 md:tw-block"
+                              data-button-ads-target="body"
+                              data-login-state-target="kevelAd"
+                              data-ad-prop="{&quot;requestBody&quot;:{&quot;placements&quot;:[{&quot;count&quot;:1,&quot;siteId&quot;:1267711,&quot;adTypes&quot;:[2776],&quot;divName&quot;:&quot;multiWinner&quot;,&quot;zoneIds&quot;:[304109],&quot;networkId&quot;:11401}]},&quot;templateName&quot;:&quot;searchNew&quot;}"
+                              data-cg-logo-url="https://static.coingecko.com/s/gecko-65456030ba03df0f83f96e18d0c8449485c1a61dbdeeb733ca69164982489d0e.svg"
+                              data-sponsored="Sponsored"
+                              data-search-v2-target="searchAd">
+                            </div>
+                        </div>
+                        <div data-search-v2-target="smartResult" class="tw-hidden md:tw-block">
+                        </div>
+                      </div>
+                  </div>
+                  <div class="tw-hidden md:tw-flex tw-flex-row tw-gap-4 tw-items-center tw-py-2 tw-px-4 tw-bg-gray-100 dark:tw-bg-moon-700 tailwind-reset">
+                      <div class="tw-flex tw-flex-row tw-items-center tw-gap-1">
+                        <span data-view-component="true" class="!tw-px-2 tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-bg-gray-400 dark:tw-bg-moon-500 tw-rounded-md">
+                            <div data-view-component="true" class="tw-text-xs tw-leading-4 tw-text-white dark:tw-text-moon-50 tw-font-medium">
+                              <i class="far fa-fa-regular fa-arrow-up"></i>
+                            </div>
+                        </span>
+                        <span data-view-component="true" class="!tw-px-2 tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-bg-gray-400 dark:tw-bg-moon-500 tw-rounded-md">
+                            <div data-view-component="true" class="tw-text-xs tw-leading-4 tw-text-white dark:tw-text-moon-50 tw-font-medium">
+                              <i class="far fa-fa-regular fa-arrow-down"></i>
+                            </div>
+                        </span>
+                        <div data-view-component="true" class="tw-text-xs tw-leading-4 tw-text-gray-500 dark:tw-text-moon-200 tw-font-medium">
+                            Move
+                        </div>
+                      </div>
+                      <div class="tw-flex tw-flex-row tw-items-center tw-gap-1">
+                        <span data-view-component="true" class="!tw-px-2 tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-bg-gray-400 dark:tw-bg-moon-500 tw-rounded-md">
+                            <div data-view-component="true" class="tw-text-xs tw-leading-4 tw-text-white dark:tw-text-moon-50 tw-font-medium">
+                              <i class="far fa-fa-regular fa-arrow-turn-down-left"></i>
+                            </div>
+                        </span>
+                        <div data-view-component="true" class="tw-text-xs tw-leading-4 tw-text-gray-500 dark:tw-text-moon-200 tw-font-medium">
+                            Select
+                        </div>
+                      </div>
+                      <div class="tw-flex tw-flex-row tw-items-center tw-gap-1">
+                        <span data-view-component="true" class="!tw-px-2 tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-bg-gray-400 dark:tw-bg-moon-500 tw-rounded-md">
+                            <div data-view-component="true" class="tw-text-xs tw-leading-4 tw-text-white dark:tw-text-moon-50 tw-font-medium">
+                              ESC
+                            </div>
+                        </span>
+                        <div data-view-component="true" class="tw-text-xs tw-leading-4 tw-text-gray-500 dark:tw-text-moon-200 tw-font-medium">
+                            Close
+                        </div>
+                      </div>
+                  </div>
+                </div>
+            </div>
+            <div id="search-backdrop" class="tw-hidden 2lg:tw-hidden tw-h-screen tw-w-screen tw-fixed tw-left-0 tw-top-[3rem] tw-bg-white dark:tw-bg-moon-900" data-search-v2-target="searchBackdrop"></div>
           </div>
+      </div>
+    </div>
+    <div data-view-component="true" class="tw-flex tw-gap-x-2 tw-items-center tw-text-gray-500 dark:tw-text-moon-200 tw-text-sm">
+      <div class="tw-w-full tw-border-t tw-border-gray-200 dark:tw-border-moon-700"></div>
+    </div>
+    </div>
           <div class="2lg:tw-hidden tw-mt-8 tw-grid tw-grid-cols-3 tw-gap-x-2">
             <button onclick="Modal.show(&#39;language_selector&#39;)" type="button" data-view-component="true"
               class="tw-bg-white dark:tw-bg-moon-800 !tw-border-t-2 !tw-border-x-2 !tw-border-slate-300 dark:!tw-border-moon-500 tw-shadow-secondaryShadow dark:tw-shadow-secondaryShadowDark !tw-mb-1 hover:tw-bg-slate-100 dark:hover:tw-bg-moon-700 hover:tw-shadow-secondaryHover dark:hover:tw-shadow-secondaryHoverDark active:!tw-shadow-secondaryActive dark:active:!tw-shadow-secondaryActiveDark tw-transition-all tw-duration-150 active:tw-translate-y-2 tw-items-center tw-justify-center tw-font-semibold tw-text-inline tw-rounded-lg tw-select-none focus:tw-outline-none tw-px-4 tw-py-2 tw-flex tw-w-full">
@@ -429,11 +652,11 @@ dialog {
               <div class="tw-flex tw-flex-col">
                 <div data-view-component="true"
                   class="tw-font-bold tw-text-gray-900 dark:tw-text-moon-50 tw-text-lg tw-leading-7">
-                  <span data-price-target="price" data-price-btc="35308319.29548845">$152,233,202</span>
+                  <span data-price-target="price" data-price-btc="35308319.29548845">$8,233,202</span>
                 </div>
                 <div data-view-component="true"
                   class="tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-text-gray-500 dark:tw-text-moon-200 tw-font-semibold tw-text-sm tw-leading-5">
-                  Volumen Capital Total 24h
+                  Volumen Capital Total 7d
                 </div>
               </div>
               <a href="" class="tw-block tw-h-full">
@@ -445,11 +668,11 @@ dialog {
               <div class="tw-flex tw-flex-col">
                 <div data-view-component="true"
                   class="tw-font-bold tw-text-gray-900 dark:tw-text-moon-50 tw-text-lg tw-leading-7">
-                  <span data-price-target="price" data-price-btc="2365331.1828665757">79,988</span>
+                  <span data-price-target="price" data-price-btc="2365331.1828665757">5,988</span>
                 </div>
                 <div data-view-component="true"
                   class="tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-text-gray-500 dark:tw-text-moon-200 tw-font-semibold tw-text-sm tw-leading-5">
-                  Volumen Facturas 24h
+                  Volumen Facturas 7d
                 </div>
               </div>
               <a href="" class="tw-block tw-h-full">
@@ -1051,7 +1274,7 @@ dialog {
               </td>
               <td data-view-component="true"
                 class="tw-sticky 2lg:tw-static tw-left-[51px] md:tw-left-[72px] tw-px-1 tw-py-2.5 2lg:tw-p-2.5 tw-bg-inherit tw-text-gray-900 dark:tw-text-moon-50">
-                <a class="tw-flex tw-items-center tw-w-full" href="">
+                <a class="tw-flex tw-items-center tw-w-full" href="{% url 'pool/' %}">
                   <img class="tw-mr-2 !tw-h-6 tw-w-6 tw-object-fill" loading="lazy" alt="BTC"
                     src="{% static 'svg/mercado/1m.svg' %}" />
                   <div class="tw-flex tw-flex-col 2lg:tw-flex-row tw-items-start 2lg:tw-items-center">
