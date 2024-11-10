@@ -1,4 +1,3 @@
-
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -12,4 +11,5 @@ urlpatterns = [
     path('login_f/' , views.login_f, name='login_f'),
     path('pool/', views.pool, name='pool'),
     path('upload_xml/', views.upload_xml, name='upload_xml'),
+    path('simulate_upload_contract/', views.simulate_upload_contract, name='simulate_upload_contract'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

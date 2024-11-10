@@ -3,7 +3,7 @@
 /* Chart.js docs: https://www.chartjs.org/ */
 
 window.chartColors = {
-	green: '#75c181',
+	green: '#ff651d',
 	gray: '#a9b5c9',
 	text: '#252930',
 	border: '#e7e9ed'
