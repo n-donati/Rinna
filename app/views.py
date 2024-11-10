@@ -46,7 +46,7 @@ def seed_database():
         )
 
         # Create some sample Facturas
-        for i in range(20):  # Create 5 sample facturas
+        for i in range(5):  # Create 5 sample facturas
             factura = Facturas.objects.create(
                 ID_cedente=cedente,
                 deudor="Costco",
@@ -58,7 +58,6 @@ def seed_database():
 
 def pool(request):
     deudor = "Costco"
-    factor = "BBVA"
     
     # Check if database is empty and seed if necessary
     if not Facturas.objects.exists():
@@ -107,8 +106,6 @@ def pool(request):
     subdivision3 = round(assigned_pools['pool3']['current_total'], 2)
     subdivision4 = round(assigned_pools['pool4']['current_total'], 2)
     
-    print(subdivision1+subdivision2+subdivision3+subdivision4)
-    
     # Get puja_actual safely
     try:
         puja_actual = Facturas.objects.first().interes_firmado
@@ -147,6 +144,17 @@ def pool(request):
     percentage2 = round(Pool.objects.get(id=2).puja_actual, 4)
     percentage3 = round(Pool.objects.get(id=3).puja_actual, 4) 
     percentage4 = round(Pool.objects.get(id=4).puja_actual, 4)
+    
+    bids = []
+    factores = ['BBVA', 'BBVA', 'Santander', 'HSBC']
+    for id in range(1, 5):
+        pool_instance = Pool.objects.get(deudor=deudor, id=id)
+        bids.append({
+            'id': id,
+            'percentage': round(pool_instance.puja_actual, 4),
+            'last_puja_time': pool_instance.fecha_puja_actual,
+            'factor': factores[id - 1]
+        })
 
     return render(request, 'pool.html', {
         'poolSize': round(poolSize, 2),
@@ -158,13 +166,12 @@ def pool(request):
         'percentage2': percentage2,
         'percentage3': percentage3,
         'percentage4': percentage4,
-        'factor': factor,
         'volumenFacturas': len(facturas),
-        'horaPuja1': Pool.objects.get(id=1).fecha_puja_actual,
         'fechaVencimientoSubasta': datetime.now()
     .replace(hour=23, minute=59, second=59),
     'plazoMedioDePago': facturas.aggregate(promedio_plazo=Sum('plazo') / len(facturas))['promedio_plazo'],
     'ofertasTotales': Puja.objects.count(),
+    'bids': bids
     })
 
 def assign_pools(poolSize, facturas):
