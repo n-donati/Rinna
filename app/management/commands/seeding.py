@@ -31,7 +31,7 @@ class Command(BaseCommand):
 
         # Create or get a Factor
         factor, created = Factor.objects.get_or_create(
-            factor='BBVA',
+            factor='Bancomer',
             rfc='DEF987654321',
         )
 
