@@ -31,4 +31,5 @@ EXPOSE 8000
 RUN python manage.py makemigrations app
 RUN python manage.py makemigrations
 RUN python manage.py migrate
+RUN python manage.py collectstatic --noinput
 CMD ["gunicorn", "rinna.wsgi:application", "--bind", "0.0.0.0:8000"]
