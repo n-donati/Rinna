@@ -43,14 +43,16 @@
       })(window, document);
     </script>
 
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">  
+
     <link
-      href="{% static 'images/favicon.ico' %}"
+      href="{% static 'favicon.ico' %}"
       rel="icon"
       type="image/x-icon"
     />
 
     <link
-      href="{% static 'images/rinna.png' %}"
+      href="{% static 'rinna.png' %}"
       rel="apple-touch-icon"
     />
 
@@ -376,11 +378,11 @@
           </div>
           <div class="menu-footer">
             <a
-              href=""
+              href="{% url 'login_c' %}"
               target="_blank"
               class="button-style-3 w-inline-block"
               ><div class="w-layout-vflex bs1-label">
-                <div class="body-small">Únete a la comunidad</div>
+                <div class="body-small">Únete</div>
               </div>
               <div class="bs1-arrow">
                 <img
@@ -500,8 +502,7 @@
           </div>
           <div class="w-layout-vflex flex-block-10">
             <a
-              href="https://"
-              target="_blank"
+              href="{% url 'login_c' %}"
               class="button-style-1 home-variation w-inline-block"
               ><div class="w-layout-vflex bs1-label">
                 <div class="body-medium">Únete como Cedente</div>
@@ -514,8 +515,7 @@
                   class="image"
                 /></div></a
             ><a
-            href="https://"
-            target="_blank"
+            href="{% url 'login_f' %}"
             class="button-style-1 home-variation w-inline-block"
             ><div class="w-layout-vflex bs1-label">
               <div class="body-medium">Únete como Factor</div>
