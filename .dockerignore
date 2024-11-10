@@ -9,3 +9,5 @@ venv/
 *.sqlite3
 .git
 .gitignore
+Dockerfile
+docker-compose.yml
