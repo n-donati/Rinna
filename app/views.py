@@ -74,27 +74,15 @@ def upload_xml(request):
     if request.method == 'POST' and request.FILES.get('xmlFile'):
         try:
             xml_file = request.FILES['xmlFile']
+            xml_content = xml_file.read()  
             
-            # Store the binary content of the XML file
-            xml_content = xml_file.read()  # This reads the file as binary
-            
-            # Create a new file-like object for parsing
+            # Create a BytesIO object for parsing
             from io import BytesIO
             xml_for_parsing = BytesIO(xml_content)
             
-            # Parse XML using the file-like object
+            # Parse XML
             invoice_data = parse_invoice(xml_for_parsing)
             interest_rate = calculate_interest(invoice_data)
-            
-            # Generate contract
-            contract_path = "NUEVOCONTRATO.rtf"
-            create_rtf_file(
-                invoice_data['cedente'],
-                invoice_data['fechaEmision'],
-                invoice_data['total'],
-                invoice_data['domicilioFiscalReceptor'],
-                interest_rate
-            )
             
             # Get or create Cedente
             cedente_obj, _ = Cedente.objects.get_or_create(
@@ -103,12 +91,10 @@ def upload_xml(request):
             )
             
             # Get or create Factor
-            factor_obj = Factor.objects.first()
-            if not factor_obj:
-                factor_obj = Factor.objects.create(
-                    factor='Default Factor',
-                    rfc='DEFAULT000000'
-                )
+            factor_obj = Factor.objects.first() or Factor.objects.create(
+                factor='Default Factor',
+                rfc='DEFAULT000000'
+            )
             
             # Create Pool
             pool_obj = Pool.objects.create(
@@ -118,30 +104,35 @@ def upload_xml(request):
                 ID_factor=factor_obj
             )
             
-            # Create Facturas with the XML blob
-            with open(contract_path, 'rb') as contract_file:
-                contract_content = contract_file.read()
-                
-                factura = Facturas(
-                    ID_cedente=cedente_obj,
-                    ID_pool=pool_obj,
-                    domicilio_deudor=invoice_data.get('domicilioFiscalReceptor'),
-                    deudor=invoice_data['deudor'],
-                    xml=xml_content,  # Use the binary content directly
-                    monto=Decimal(invoice_data['total']).quantize(Decimal('0.00001')),
-                    plazo=int(invoice_data['plazo']),
-                    interes_firmado=Decimal(str(interest_rate)).quantize(Decimal('0.0000000000')),
-                    contrato=contract_content
-                )
-                factura.save()
+            # Create contract content as a simple string
+            contract_content = f"""CONTRATO DE CESION DE DERECHOS DE COBRO
             
-            # Prepare response
-            response = HttpResponse(contract_content, content_type='application/rtf')
-            response['Content-Disposition'] = 'attachment; filename="contrato.rtf"'
+Cedente: {invoice_data['cedente']}
+Fecha: {invoice_data['fechaEmision']}
+Monto: ${invoice_data['total']}
+Domicilio: {invoice_data.get('domicilioFiscalReceptor', 'N/A')}
+Tasa de Interés: {interest_rate}%
+
+[Este es un contrato simplificado para demostración]
+            """.encode('utf-8')
             
-            # Cleanup
-            os.remove(contract_path)
+            # Create Facturas entry
+            factura = Facturas(
+                ID_cedente=cedente_obj,
+                ID_pool=pool_obj,
+                domicilio_deudor=invoice_data.get('domicilioFiscalReceptor'),
+                deudor=invoice_data['deudor'],
+                xml=xml_content,
+                monto=Decimal(invoice_data['total']).quantize(Decimal('0.00001')),
+                plazo=int(invoice_data['plazo']),
+                interes_firmado=Decimal(str(interest_rate)).quantize(Decimal('0.0000000000')),
+                contrato=contract_content
+            )
+            factura.save()
             
+            # Return the contract as a direct download
+            response = HttpResponse(contract_content, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="contrato.txt"'
             return response
             
         except Exception as e:
