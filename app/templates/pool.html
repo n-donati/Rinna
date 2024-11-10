@@ -330,7 +330,10 @@
                            <i data-view-component="true" class="fas fa-fw fa-star tw-mr-2 2lg:tw-mr-0.5 tw-text-yellow-500"></i>
                            <a class="nav-label tw-no-underline tw-hidden 2lg:tw-block" href="">
                               <div data-view-component="true" class="dark:!tw-text-moon-50 tw-text-gray-700 dark:tw-text-moon-100 tw-font-semibold tw-text-sm tw-leading-5">
-                                 <button href="{% url "market" %}" class="rounded">Regresar a Mercado</button>
+                                 <a href="{% url 'market' %}" data-action="click-&gt;analytics-tracker#tabTrackEvent" data-active-button="about" data-analytics-event="select_coin_details_tab" @click="activeTab = &#39;about&#39;" :class="{ selected: activeTab === &#39;about&#39; }" id="tab-about" data-view-component="true" class="gecko-tab-chip-item selected">
+                                    <span data-view-component="true" class="tw-font-semibold tw-text-sm tw-leading-5">
+                                       <span data-view-component="true">Regresa a Mercado</span>
+                           </span></a>
                               </div>
                            </a>
                            <div data-view-component="true" class="nav-label dark:!tw-text-moon-50 tw-block 2lg:tw-hidden tw-text-gray-700 dark:tw-text-moon-100 tw-font-semibold tw-text-sm tw-leading-5">
@@ -1342,7 +1345,7 @@
                                                  </div>
                                              </div>
                                              
-                                             <form method="post" id="bidForm" class="mb-3" action="{% url 'pool' %}">
+                                             <form method="post" id="bidForm" class="mb-3" action="{% url 'market' %}">
                                                 {% csrf_token %}
                                                 <div class="mb-3">
                                                    <input type="number" 
