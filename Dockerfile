@@ -26,4 +26,4 @@ RUN python manage.py migrate
 EXPOSE 8000
 
 # Start command
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "your_project_name.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "rinna.wsgi:application"]
