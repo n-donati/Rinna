@@ -8,11 +8,12 @@ import os
 from .interest.contract import create_rtf_file
 from decimal import Decimal
 from django.utils import timezone
-from .models import Cedente, Factor, Pool, Facturas
+from .models import Cedente, Factor, Pool, Facturas, Puja
 from django.db.models import Sum
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db import transaction  # Add this import
 from io import BytesIO
+import random
 
 def home(request):
     return render(request, 'home.html')
@@ -29,8 +30,39 @@ def login_c(request):
 def login_f(request):
     return render(request, 'login_f.html')
 
+def seed_database():
+    """Helper function to seed the database with initial data"""
+    with transaction.atomic():
+        # Create Factor if none exists
+        factor, _ = Factor.objects.get_or_create(
+            factor='Bancomer',
+            rfc='DEF987654321'
+        )
+
+        # Create Cedente if none exists
+        cedente, _ = Cedente.objects.get_or_create(
+            cedente='Sample Provider',
+            rfc='ABC123456789'
+        )
+
+        # Create some sample Facturas
+        for i in range(20):  # Create 5 sample facturas
+            factura = Facturas.objects.create(
+                ID_cedente=cedente,
+                deudor="Costco",
+                domicilio_deudor="Sample Address",
+                monto=Decimal(random.uniform(5000, 1000)),
+                plazo=30,
+                interes_firmado=Decimal('4.0')
+            )
+
 def pool(request):
     deudor = "Costco"
+    
+    # Check if database is empty and seed if necessary
+    if not Facturas.objects.exists():
+        seed_database()
+    
     if request.method == "POST":
         # find factor
         bid_value = request.POST.get('bid')
@@ -65,12 +97,6 @@ def pool(request):
     if not poolSize:
         # Handle empty database case
         return render(request, 'pool.html', {
-            'calculatedInterest': "0%",
-            'firstLastInterest': "0%",
-            'secondLastInterest': "0%",
-            'thirdLastInterest': "0%",
-            'fourthLastInterest': "0%",
-            'fifthLastInterest': "0%",
             'poolSize': 0,
             'subdivision1': 0,
             'subdivision2': 0,
@@ -146,12 +172,6 @@ def pool(request):
                         continue
 
     return render(request, 'pool.html', {
-        'calculatedInterest': calculatedInterest,
-        'firstLastInterest': firstLastInterest,
-        'secondLastInterest': secondLastInterest,
-        'thirdLastInterest': thirdLastInterest,
-        'fourthLastInterest': fourthLastInterest,
-        'fifthLastInterest': fifthLastInterest,
         'poolSize': round(poolSize, 2),
         'subdivision1': subdivision1,
         'subdivision2': subdivision2,
@@ -245,19 +265,76 @@ def calculate_interest(invoice_data):
 def upload_xml(request):
     if request.method == 'POST' and request.FILES.get('xmlFile'):
         try:
-            # Skip processing the uploaded XML file
-            contract_path = os.path.join('static', 'NUEVOCONTRATO.rtf')
+            xml_file = request.FILES['xmlFile']
             
-            # Read contract content
+            # Store the binary content of the XML file
+            xml_content = xml_file.read()
+            
+            # Create a new file-like object for parsing
+            xml_for_parsing = BytesIO(xml_content)
+            
+            # Parse XML using the file-like object
+            invoice_data = parse_invoice(xml_for_parsing)
+            interest_rate = calculate_interest(invoice_data)
+            
+            # Generate contract
+            contract_path = "NUEVOCONTRATO.rtf"
+            create_rtf_file(
+                invoice_data['cedente'],
+                invoice_data['fechaEmision'],
+                invoice_data['total'],
+                invoice_data['domicilioFiscalReceptor'],
+                interest_rate
+            )
+            
+            # Get or create Cedente
+            cedente_obj, _ = Cedente.objects.get_or_create(
+                cedente=invoice_data['cedente'],
+                defaults={'rfc': invoice_data['rfcCedente']}
+            )
+            
+            # Get or create Factor
+            factor_obj = Factor.objects.first()
+            if not factor_obj:
+                factor_obj = Factor.objects.create(
+                    factor='Default Factor',
+                    rfc='DEFAULT000000'
+                )
+            
+            # Create Pool
+            pool_obj = Pool.objects.create(
+                deudor=invoice_data['deudor'],
+                tamaño=Decimal(invoice_data['total']).quantize(Decimal('0.01')),
+                puja_actual=Decimal('0.0000000000'),
+                ID_factor=factor_obj
+            )
+            
+            # Create Facturas with the XML blob
             with open(contract_path, 'rb') as contract_file:
                 contract_content = contract_file.read()
+                
+                factura = Facturas(
+                    ID_cedente=cedente_obj,
+                    ID_pool=pool_obj,
+                    domicilio_deudor=invoice_data.get('domicilioFiscalReceptor'),
+                    deudor=invoice_data['deudor'],
+                    xml=xml_content,
+                    monto=Decimal(invoice_data['total']).quantize(Decimal('0.00001')),
+                    plazo=int(invoice_data['plazo']),
+                    interes_firmado=Decimal(str(interest_rate)).quantize(Decimal('0.0000000000')),
+                    contrato=contract_content
+                )
+                factura.save()
             
-            # Prepare response with contract
+            # Prepare response
             response = HttpResponse(contract_content, content_type='application/rtf')
             response['Content-Disposition'] = 'attachment; filename="contrato.rtf"'
             
+            # Cleanup
+            os.remove(contract_path)
+            
             return response
-                
+            
         except Exception as e:
             messages.error(request, f'Error: {str(e)}')
             return redirect('dashboard')
