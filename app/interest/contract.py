@@ -1,5 +1,18 @@
 import aspose.words as aw
 
+# def read_and_print_rtf(filepath):
+#     try:
+#         with open(filepath, 'r') as file:
+#             rtf_content = file.read()
+#         text = rtf_to_text(rtf_content)
+#         print(text)
+#     except FileNotFoundError:
+#         print("The file was not found.")
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+
+# read_and_print_rtf('contrato.rtf')
+
 def create_rtf_file(cedente, fecha, total, domicilio, interestRate):
     doc = aw.Document()
     builder = aw.DocumentBuilder(doc)
@@ -85,7 +98,7 @@ def create_rtf_file(cedente, fecha, total, domicilio, interestRate):
     builder.font.bold = True
     builder.writeln(f"""LA PARTE CEDENTE
                     
-
+                    
                     _______________________
                     {cedente}""")
     
@@ -97,7 +110,7 @@ def create_rtf_file(cedente, fecha, total, domicilio, interestRate):
     builder.font.bold = True
     builder.writeln("""LA PARTE CESIONARIA
                     
-
+                    
                     ______________________""")
 
     doc.save("NUEVOCONTRATO.rtf", aw.SaveFormat.RTF)

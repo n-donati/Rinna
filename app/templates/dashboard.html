@@ -743,6 +743,202 @@ function showXmlDialog(event) {
         border-radius: 5px;
     }
 </style>
+			<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Subir Factura XML</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" action="{% url 'upload_xml' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="xmlFile" class="form-label">Seleccionar archivo XML</label>
+                        <input type="file" class="form-control" id="xmlFile" name="xmlFile" accept=".xml" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-custom-primary" id="uploadBtn">Generar Contrato</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Simple form submit handler -->
+<script>
+document.getElementById('uploadForm').onsubmit = function() {
+    document.getElementById('uploadBtn').disabled = true;
+    document.getElementById('uploadBtn').innerHTML = 'Generando Contrato...';
+    
+    // Get the file input
+    const fileInput = document.getElementById('xmlFile');
+    const file = fileInput.files[0];
+    
+    if (file) {
+        // Generate a random ID (you might want to get this from your server instead)
+        const facturaId = Math.random().toString(36).substr(2, 9);
+        // For this example, we'll use a fixed amount (you should get this from the XML)
+        const monto = "100,000";
+        
+        // Add the new nav item
+        addNavItem(facturaId, monto);
+    }
+    
+    // Close modal after a short delay
+    setTimeout(function() {
+        $('#uploadModal').modal('hide');
+        document.getElementById('uploadBtn').disabled = false;
+        document.getElementById('uploadBtn').innerHTML = 'Generar Contrato';
+        document.getElementById('uploadForm').reset();
+    }, 1000);
+    
+    return true;
+};
+</script>
+<script>
+function addNavItem(facturaId, monto) {
+    const navMenu = document.querySelector('#menu-accordion');
+    const navItem = document.createElement('li');
+    navItem.classList.add('nav-item');
+
+    const navLink = document.createElement('a');
+    navLink.classList.add('nav-link');
+    navLink.href = '#';
+    navLink.onclick = function(e) { showXmlDialog(e); };
+
+    // Create icon span
+    const iconSpan = document.createElement('span');
+    iconSpan.classList.add('nav-icon');
+    
+    // Add SVG icon
+    iconSpan.innerHTML = `
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list green-icon"
+            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+            <path fill-rule="evenodd"
+                d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z" />
+            <circle cx="3.5" cy="5.5" r=".5" />
+            <circle cx="3.5" cy="8" r=".5" />
+            <circle cx="3.5" cy="10.5" r=".5" />
+        </svg>
+    `;
+
+    // Create text span
+    const textSpan = document.createElement('span');
+    textSpan.classList.add('nav-link-text');
+    textSpan.dataset.invoiceId = facturaId;
+    textSpan.textContent = `$${monto} -- ${facturaId}`;
+
+    // Assemble the elements
+    navLink.appendChild(iconSpan);
+    navLink.appendChild(textSpan);
+    navItem.appendChild(navLink);
+
+    // Insert at the beginning of the list
+    navMenu.insertBefore(navItem, navMenu.firstChild);
+    
+    // Update the counter after adding new item
+    updateActiveInvoicesCount();
+}
+</script>
+
+<!-- Add this function in your script section -->
+<script>
+function updateActiveInvoicesCount() {
+    const greenIcons = document.querySelectorAll('.bi-card-list.green-icon');
+    const activeInvoicesCounter = document.querySelector('.stats-figure');
+    if (activeInvoicesCounter) {
+        activeInvoicesCounter.textContent = greenIcons.length;
+    }
+}
+
+// Add this to your DOMContentLoaded event to initialize the counter
+document.addEventListener('DOMContentLoaded', function() {
+    updateActiveInvoicesCount();
+    // ...rest of your existing DOMContentLoaded code...
+});
+</script>
+
+<!-- Add this div for messages if not already present -->
+<div class="messages mt-3">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<!-- Replace the old XML Modal Dialog with this Bootstrap version -->
+<div class="modal fade" id="xmlModal" tabindex="-1" aria-labelledby="xmlModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 500px;"> <!-- Changed from modal-lg and added custom width -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="xmlModalLabel">Detalles de Factura</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <pre class="xml-content" style="max-height: 400px; overflow-y: auto;">
+<?xml version="1.0" encoding="UTF-8"?>
+<factura>
+    <informacionGeneral>
+        <folio>z14Zg0TCi</folio>
+        <fecha>2024-01-20</fecha>
+        <monto>68000.00</monto>
+        <estatus>PENDIENTE</estatus>
+    </informacionGeneral>
+    <emisor>
+        <nombre>Empresa ABC</nombre>
+        <rfc>ABC123456XYZ</rfc>
+    </emisor>
+    <receptor>
+        <nombre>Cliente XYZ</nombre>
+        <rfc>XYZ789012ABC</rfc>
+    </receptor>
+    <conceptos>
+        <concepto>
+            <descripcion>Servicios profesionales</descripcion>
+            <cantidad>1</cantidad>
+            <valorUnitario>68000.00</valorUnitario>
+            <importe>68000.00</importe>
+        </concepto>
+    </conceptos>
+</factura>
+                </pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update the onclick handler in all nav-items to use the Bootstrap modal -->
+<script>
+function showXmlDialog(event) {
+    event.preventDefault();
+    var xmlModal = new bootstrap.Modal(document.getElementById('xmlModal'));
+    xmlModal.show();
+}
+</script>
+
+<!-- Remove the old modal styles from the CSS -->
+<style>
+    /* Remove .modal-custom, .modal-custom-content, .modal-custom-header styles */
+    .xml-content {
+        white-space: pre-wrap;
+        font-family: monospace;
+        background-color: #f5f5f5;
+        padding: 15px;
+        border-radius: 5px;
+    }
+</style>
 
 </body>
 
