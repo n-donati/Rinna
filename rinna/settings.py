@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-e@lpopmb+1m%6&gq8(1pr700o7v8$+k%(w*(!s5s&$4u+n=0bh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '*',
+    '.railway.app'
+]
 
 # Application definition
 
@@ -40,10 +43,14 @@ INSTALLED_APPS = [
     'app',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://rinna.up.railway.app']
+CSRF_TRUSTED_ORIGINS = [
+    'https://rinna.up.railway.app',
+    'https://*.railway.app'
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -124,11 +131,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
