@@ -5,7 +5,7 @@ class Cedente(models.Model):
     rfc = models.CharField(max_length=13)
     fecha_registro = models.DateField(auto_now_add=True)
 
-    def _str_(self):
+    def str(self):
         return self.cedente
 
 class Factor(models.Model):
@@ -13,7 +13,7 @@ class Factor(models.Model):
     rfc = models.CharField(max_length=13)
     fecha_registro = models.DateField(auto_now_add=True)
 
-    def _str_(self):
+    def str(self):
         return self.factor
 
 # class Deudor(models.Model):
