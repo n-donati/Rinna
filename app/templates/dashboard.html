@@ -534,19 +534,6 @@
 					});
 				});
 			</script>
-			<script>
-				document.addEventListener('DOMContentLoaded', function() {
-					fetch('get-recommendation/?salud_general={{ salud_general }}')  // Make sure this URL matches your urls.py
-						.then(response => response.json())
-						.then(data => {
-							document.getElementById('recommendation-placeholder').textContent = data.recommendation;
-						})
-						.catch(error => {
-							console.error('Error fetching recommendation:', error);
-							document.getElementById('recommendation-placeholder').textContent = 'No se pudo cargar la recomendación.';
-						});
-				});
-			</script>
 			<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
